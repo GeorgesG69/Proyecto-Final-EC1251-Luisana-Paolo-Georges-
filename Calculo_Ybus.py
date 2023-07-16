@@ -34,6 +34,8 @@ def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
             elif j == -1:
                 salida_bus[i,i] = salida_bus[i,i] + 1/matriz_dato[k,2]
 
+    salida_bus = salida_bus
+
 
     return salida_bus
 

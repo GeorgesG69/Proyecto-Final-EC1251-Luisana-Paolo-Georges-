@@ -39,8 +39,7 @@ def I_fuente(res_i_fuente, indc_i_fuente, cap_i_fuente, v_ang, bus_I):
 
             Impd_capact_i[b] = 0
             
-
-        elif cap_i_fuente[b] != 0:
+        else:
 
             Impd_capact_i[b] = (-1j) / (v_ang * cap_i_fuente[b])
 
@@ -69,7 +68,7 @@ def Z(Resis_Z, Indc_Z, Cap_Z, V_ang, Bus_Z):
             Imp_Cap_Z[b] = (-1j) / (V_ang * Cap_Z[b])
 
     Impedancia_Z = Imp_Resis_Z + Imp_Ind_Z + Imp_Cap_Z
-    #print(f"impedancia z: {Impedancia_Z}")
+    #print(f"impedancia z:\n\n {Impedancia_Z}")
     return Impedancia_Z, Imp_Resis_Z, Imp_Ind_Z, Imp_Cap_Z
 
 #--------------------------------------------CORRIENTES INYECTADAS--------------------------------------------------

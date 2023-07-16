@@ -5,24 +5,37 @@ import math
 def generador(imp_gen, voltaje, phi, vth, index_gen):
 
     #Pasamos el voltaje del generador a su forma rectangular
-    voltaje_generado=np.zeros((len(voltaje),1),dtype="complex_")
+    voltaje_generado=np.zeros((len(voltaje)),dtype="complex_")
     for i in range(len(voltaje)):
-        voltaje_generado[i,0] = voltaje[i]*(math.cos(phi[i]) + math.sin(phi[i])*1j)
+        voltaje_generado[i] = voltaje[i]*(math.cos(phi[i]) + math.sin(phi[i])*1j)
+    voltaje_potencia=np.zeros((len(voltaje),1),dtype="complex_")
+    print(vth)
+    print(voltaje_generado)
 
+    
     #Calculo de la corriente del generador
     corriente_generado=np.zeros((len(voltaje),1),dtype="complex_")
     for i in range(len(voltaje)):
         indice_vth = index_gen[i] - 1
-        voltaje_carga = voltaje_generado[i,0] - vth[indice_vth,0]
+        voltaje_potencia[i,0] = vth[indice_vth,0]
+        voltaje_carga = vth[i] - voltaje_generado[i]
         corriente_generado[i,0] = voltaje_carga/imp_gen[i]
     
     #Potencia de los generadores
     p_generado=np.zeros((len(voltaje),1),dtype="complex_")
     q_generado=np.zeros((len(voltaje),1),dtype="complex_")
     
-    p_generado = (voltaje_generado * np.conjugate(corriente_generado)).real
-    q_generado = (voltaje_generado * np.conjugate(corriente_generado)).imag
-        
+    p_generado = (voltaje_carga * np.conjugate(corriente_generado)).real
+    q_generado = (voltaje_carga * np.conjugate(corriente_generado)).imag
+    #print(p_generado) 
+    print(voltaje_carga)
+    #print(imp_gen)
+    #print(voltaje_generado)   
+    #print(vth)
+    print("corriente\n\n", corriente_generado)
+    #print(np.sqrt(voltaje_carga.real ** 2 + voltaje_carga.imag **2))
+    #print(imp_gen)
+    #print(np.sqrt(p_generado**2 + q_generado**2))
     return p_generado, q_generado
 #---------------------------------------------------- POTENCIA DE LA CARGA ------------------------------------------
 def Cargas(imp_carga, Vth, bus_i_carga):

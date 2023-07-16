@@ -102,7 +102,7 @@ def run():
 
     #Voltajes de thevenin
     vth,vth_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
-    print(vth)
+    #print(vth)
 
     #GBUS
     #g_bus = Calculo_Ybus.gbus(y_bus,num_barras)

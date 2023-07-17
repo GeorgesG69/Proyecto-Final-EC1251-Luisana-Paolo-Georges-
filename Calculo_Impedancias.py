@@ -73,6 +73,10 @@ def Z(Resis_Z, Indc_Z, Cap_Z, V_ang, Bus_Z):
 
 #--------------------------------------------CORRIENTES INYECTADAS--------------------------------------------------
 def Matriz_Corrientes(Voltaje, Desface_v, Impedancia_v, Nro_nodos, Nodo_v_i):
+    #print(Nro_nodos)
+    #print(len(Nodo_v_i))
+    #print(np.transpose(Impedancia_v))
+    #print(Voltaje)
 #Grados a radianes
     for i in range(len(Desface_v)):
         Desface_v[i]= (Desface_v[i] * math.pi)/180
@@ -81,7 +85,9 @@ def Matriz_Corrientes(Voltaje, Desface_v, Impedancia_v, Nro_nodos, Nodo_v_i):
     Vec_Corrientes = np.zeros((Nro_nodos,1), dtype="complex_")
     for i in range(len(Nodo_v_i)):
         indice = Nodo_v_i[i]-1
+        
         Vec_Corrientes[indice] = Voltaje[i]*(math.cos(Desface_v[i]) + 1j*math.sin(Desface_v[i]))/Impedancia_v[i] 
+        
     Vec_Corrientes = np.round(Vec_Corrientes,4)
     #print(Vec_Corrientes)
     return Vec_Corrientes

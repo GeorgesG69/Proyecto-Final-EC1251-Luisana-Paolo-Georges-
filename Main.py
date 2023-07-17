@@ -31,22 +31,24 @@ Nro_Nodos = int(max(Nro_Nodos_i,Nro_Nodos_j))
 
 
 
+
 # Datos
 # -Fuente de voltaje:
 Res_V_fuente = np.array(Dframe_V_fuente.iloc[:, 4])                     #Resistencia de la V_fuente
 Ind_V_fuente = np.array(Dframe_V_fuente.iloc[:, 5]) * (10 ** -3)        #Inductancia de la V_fuente
 Cap_V_fuente = np.array(Dframe_V_fuente.iloc[:, 6]) * (10 ** -6)        #Capacitancia de la V_fuente
 Desfase_V_fuente = np.array(Dframe_V_fuente.iloc[:, 3], dtype="float_") #Angulo de desfase V_fuente
-V_pico_V_fuente = np.array(Dframe_V_fuente.iloc[:, 2])                  #Voltaje pico de la V_fuente
+V_pico_V_fuente = np.array(Dframe_V_fuente.iloc[:, 2] / np.sqrt(2))                  #Voltaje pico de la V_fuente
 Nodo_V_fuente_i = np.array(Dframe_V_fuente.iloc[:, 0])                  #Nodo i V_fuente
 Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         #Nodo j V_fuente
+
 
 # -Fuente de corriente:
 Res_I_fuente = np.array(Dframe_I_fuente.iloc[:, 4])                     #Resistencia de la I_fuente
 Ind_I_fuente = np.array(Dframe_I_fuente.iloc[:, 5]) * (10 ** -3)        #Inductancia de la I_fuente
 Cap_I_fuente = np.array(Dframe_I_fuente.iloc[:, 6]) * (10 ** -6)        #Capacitancia de la I_fuente
 Desfase_I_fuente = np.array(Dframe_I_fuente.iloc[:, 3], dtype="float_") #Angulo de desfase I_fuente
-I_pico_I_fuente = np.array(Dframe_I_fuente.iloc[:, 2])                  #Voltaje pico de la I_fuente
+I_pico_I_fuente = np.array(Dframe_I_fuente.iloc[:, 2] / np.sqrt(2))                  #Voltaje pico de la I_fuente
 Nodo_I_fuente_i = np.array(Dframe_I_fuente.iloc[:, 0])                  #Nodo i I_fuente
 Nodo_I_fuente_j = np.full((len(Dframe_I_fuente.iloc[:, 0])), 0)         #Nodo j I_fuente
 index_carga = np.concatenate(([Nodo_I_fuente_i], [Nodo_I_fuente_j]))    #Matriz de conexion de las cargas
@@ -78,10 +80,10 @@ def run():
     #print(imp_carga)
 
 
-    #Lineas
+    #Ramas
     Imp_Z, Impres_Z, Impind_Z, Impcap_Z = Calculo_Impedancias.Z(Res_Z, Ind_Z, Cap_Z, Vel_Ang, Nodo_Z_i)
-    Z = np.concatenate(([Nodo_Z_i],[Nodo_Z_j],[Imp_Z]),axis=0)      
-    Z = np.transpose(Z)
+    Zs = np.concatenate(([Nodo_Z_i],[Nodo_Z_j],[Imp_Z]),axis=0)      
+    Zs = np.transpose(Zs)
     #print(imp_linea)
     dato_linea = np.concatenate(([Res_Z],[Ind_Z], [Cap_Z]),axis=0)
     dato_linea = np.transpose(dato_linea)
@@ -90,9 +92,10 @@ def run():
 #------------------------------------------------- CALCULO DE YBUS, VTH Y ZTH --------------------------------------------------
     #Corrientes inyectadas
     Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, Desfase_V_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i)
+    #print(Vector_Corrientes_I)
 
     #Y bus
-    y_bus = Calculo_Ybus.Matriz_Y_Bus(V_fuente, I_fuente, Z, Nro_Nodos, Nro_Nodos_i, Nro_Nodos_j) 
+    y_bus = Calculo_Ybus.Matriz_Y_Bus(V_fuente, I_fuente, Zs, Nro_Nodos, Nro_Nodos_i, Nro_Nodos_j) 
     y_bus = np.round(y_bus,4)
     #print(y_bus)
 
@@ -101,32 +104,24 @@ def run():
     zth, zbus = Calculo_Ybus.Zth(y_bus)
 
     #Voltajes de thevenin
-    vth,vth_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
-    #print(vth)
-
-    #GBUS
-    #g_bus = Calculo_Ybus.gbus(y_bus,num_barras)
-
-    #BBUS
-   # b_bus = Calculo_Ybus.bbus(y_bus,num_barras)
+    V_thevenin,V_thevenin_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
+    #print(V_thevenin)
 
 
 #------------------------------------------------ CALCULO DE LAS POTENCIAS ------------------------------------------------
 
     #Potencia del generador
-    p_gen, q_gen= Calculo_Potencias.generador(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, vth_rect, Nodo_V_fuente_i)
-    #print("pg \n\n", p_gen, "\n\n")
-    #print("qg \n\n", q_gen)
-    #print(f"modulo: \n\n {np.sqrt(p_gen ** 2 + q_gen ** 2)}")
+    p_gen, q_gen= Calculo_Potencias.generador(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
+    
 
-    #Potencia de la carga
-    #s_load, p_load, q_load  = Calculo_Potencias.Cargas(imp_carga, vth_rect, barra_carga_i)
+    #Potencia de las impedancias
+    p_load, q_load  = Calculo_Potencias.Cargas(Imp_Z, V_thevenin_rect, Nodo_Z_i)
 
     #Lineflow (Flujo de potencias)
-    #p_ij, q_ij, p_ji, q_ji = Calculo_Potencias.lineflow(index_linea, dato_linea, longitud, vth_rect)
+    p_ij, q_ij, p_ji, q_ji = Calculo_Potencias.lineflow(index_linea, dato_linea, V_thevenin_rect)
 
     #Balance de potencias
-    #delta_p, delta_q = Calculo_Potencias.balance(p_gen, q_gen, p_load, q_load)
+    delta_p, delta_q = Calculo_Potencias.balance(p_gen, q_gen, p_load, q_load)
     #print(delta_p)
     #print(delta_q)
 

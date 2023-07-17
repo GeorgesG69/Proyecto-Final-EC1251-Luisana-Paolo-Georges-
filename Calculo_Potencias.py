@@ -2,44 +2,51 @@ import numpy as np
 import math
 import cmath
 
-#--------------------------------------------------- POTENCIA DEL GENERADOR -----------------------------------------
-def generador(Imp_V_fuente, voltaje, phi, vth, index_gen):
+                                            # -Potencias de las fuentes de voltaje- #
+def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
 
     
 
-    #Pasamos el voltaje del generador a su forma rectangular
-    voltaje_generado=np.zeros((len(voltaje),1),dtype="complex_")
-    for i in range(len(voltaje)):
-        voltaje_generado[i,0] = voltaje[i]*(math.cos(phi[i]) )+ voltaje[i]*(math.sin(phi[i])*1j)
+    # Transformación del voltaje pico de las fuentes a forma rectangular.
 
-    voltaje_potencia=np.zeros((len(voltaje),1),dtype="complex_")
-    #Calculo de la corriente del generador
-    corriente_generado=np.zeros((len(voltaje),1),dtype="complex_")
-    for i in range(len(voltaje)):
-        indice_vth = index_gen[i] - 1
-        voltaje_potencia[i,0] = vth[indice_vth,0]
-        voltaje_carga = voltaje_generado[i,0] - vth[indice_vth,0]
-        corriente_generado[i,0] = voltaje_carga/Imp_V_fuente[i]
+    Voltajes_Fuente = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
+
+    for i in range(len(Voltaje_Pico)):
+
+        Voltajes_Fuente[i,0] = Voltaje_Pico[i] * (math.cos(Desface[i])) + Voltaje_Pico[i] * (math.sin(Desface[i]) * 1j)
+
+    Voltaje_Potencia = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
+
+    # Cálculo de la corriente de las fuentes de voltaje.
+
+    Corrientes_V_fuentes = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
+
+    for i in range(len(Voltaje_Pico)):
+
+        Indice_Vth = Indice_V_fuente[i] - 1
+        Voltaje_Potencia[i,0] = Vth[Indice_Vth,0]
+        Voltaje_Impedancia = Voltajes_Fuente[i,0] - Vth[Indice_Vth,0]
+        Corrientes_V_fuentes[i,0] = Voltaje_Impedancia / Imp_V_fuente[i]
     
-    p_generado = (voltaje_potencia * np.conjugate(corriente_generado)).real
-    q_generado = (voltaje_potencia * np.conjugate(corriente_generado)).imag
-    #print(np.sqrt(p_generado **2 + q_generado**2))
+    P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
+    Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
         
-    return p_generado, q_generado
-#---------------------------------------------------- POTENCIA DE LA CARGA ------------------------------------------
+    return P_V_fuente, Q_V_fuente
+                                    # -Potencias de las impedancias- #
 
-def Cargas(imp_carga, Vth, bus_i_carga):
+def Potencias_Z(Imp_Z, Vth, Bus_i_Z):
 
-    admitancia = 1/imp_carga
-    s_carga = np.zeros((len(bus_i_carga), 1), dtype="complex_")
+    admitancia = 1/Imp_Z
+    s_carga = np.zeros((len(Bus_i_Z), 1), dtype="complex_")
 
-    for i in range(len(bus_i_carga)):
-        index = bus_i_carga[i] -1
+    for i in range(len(Bus_i_Z)):
+        index = Bus_i_Z[i] -1
         s_carga[i] = ((Vth[index,0]) ** 2) * np.conjugate(admitancia[i])
     
         p_carga = np.real(s_carga)
         q_carga = np.imag(s_carga)
-    #print(np.sqrt(p_carga ** 2 + q_carga **2))
+
+    print(p_carga, "\n\n", q_carga)
     return p_carga, q_carga
 
 #------------------------------------------------ LINEFLOW --------------------------------------------------------
@@ -74,7 +81,7 @@ def lineflow(indice_l, dato_lineas, voltline):
     return Pij, Qij, Pji, Qji
 
 #-------------------------------------------------BALANCE DE POTENCIAS-------------------------------------------------
-def balance(p_gen, q_gen, p_load, q_load):
+def Balance_Potencias(p_gen, q_gen, p_load, q_load):
     p_entregado = p_gen.sum(axis=0)
     q_entregado = q_gen.sum(axis=0)
 
@@ -84,9 +91,3 @@ def balance(p_gen, q_gen, p_load, q_load):
     delta_q = q_entregado - q_carga
     return delta_p, delta_q
 
-def perdidas(P_ij, Q_ij, P_ji, Q_ji):
-
-    s_perdida = (P_ij + Q_ij*1j) + (P_ji + Q_ji*1j)
-    #print(s_perdida)
-
-    return s_perdida

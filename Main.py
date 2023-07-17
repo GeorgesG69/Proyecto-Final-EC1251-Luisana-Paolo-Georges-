@@ -77,24 +77,24 @@ def Main_Analisis():
     # Fuentes de voltaje.
 
     Imp_V_fuente, Impres_v, Impind_v, Impcap_v = Calculo_Impedancias.V_fuente(Res_V_fuente, Ind_V_fuente, Cap_V_fuente, Vel_Ang, Nodo_V_fuente_i)
-    V_fuente =  np.concatenate(([Nodo_V_fuente_i],[Nodo_V_fuente_j],[Imp_V_fuente]), axis=0)
+    V_fuente =  np.concatenate(([Nodo_V_fuente_i], [Nodo_V_fuente_j], [Imp_V_fuente]), axis=0)
     V_fuente = np.transpose(V_fuente)
     
     
     # Fuentes de corriente.
 
     Imp_I_fuente, Impres_i, Impind_i, impcap_i = Calculo_Impedancias.I_fuente(Res_I_fuente, Ind_I_fuente, Cap_I_fuente, Vel_Ang, Nodo_I_fuente_i)
-    I_fuente = np.concatenate(([Nodo_I_fuente_i],[Nodo_I_fuente_j],[Imp_I_fuente]),axis=0)
+    I_fuente = np.concatenate(([Nodo_I_fuente_i], [Nodo_I_fuente_j], [Imp_I_fuente]), axis=0)
     I_fuente = np.transpose(I_fuente)
     
 
     # Ramas.
 
     Imp_Z, Impres_Z, Impind_Z, Impcap_Z = Calculo_Impedancias.Z(Res_Z, Ind_Z, Cap_Z, Vel_Ang, Nodo_Z_i)
-    Zs = np.concatenate(([Nodo_Z_i],[Nodo_Z_j],[Imp_Z]),axis=0)      
+    Zs = np.concatenate(([Nodo_Z_i], [Nodo_Z_j], [Imp_Z]), axis=0)      
     Zs = np.transpose(Zs)
     
-    Dato_Ramas = np.concatenate(([Res_Z],[Ind_Z], [Cap_Z]),axis=0)
+    Dato_Ramas = np.concatenate(([Res_Z], [Ind_Z], [Cap_Z]), axis=0)
     Dato_Ramas = np.transpose(Dato_Ramas)
 
 
@@ -115,31 +115,33 @@ def Main_Analisis():
 
     zth, zbus = Calculo_Ybus.Zth(y_bus)
 
+
     # Vth.
 
     V_thevenin, V_thevenin_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
     
 
+                                                # -Cálculo de las potencias- #
 
-#------------------------------------------------ CALCULO DE LAS POTENCIAS ------------------------------------------------
+    # Potencia del generador.
 
-    #Potencia del generador
-    p_gen, q_gen= Calculo_Potencias.generador(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
+    P_V_fuente, Q_V_fuente= Calculo_Potencias.V_fuentes(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
     
 
-    #Potencia de las impedancias
-    p_load, q_load  = Calculo_Potencias.Cargas(Imp_Z, V_thevenin_rect, Nodo_Z_i)
+    # Potencia de las impedancias.
 
-    #Lineflow (Flujo de potencias)
+    P_Z, Q_Z  = Calculo_Potencias.Potencias_Z(Imp_Z, V_thevenin_rect, Nodo_Z_i)
+
+
+    # Flujo de potencias.
+
     p_ij, q_ij, p_ji, q_ji = Calculo_Potencias.lineflow(Indice_Rama, Dato_Ramas, V_thevenin_rect)
 
-    #Balance de potencias
-    delta_p, delta_q = Calculo_Potencias.balance(p_gen, q_gen, p_load, q_load)
-    #print(delta_p)
-    #print(delta_q)
 
+    # Balance de potencias.
 
-
+    delta_p, delta_q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
+    
 
 if __name__ == "__main__":
 

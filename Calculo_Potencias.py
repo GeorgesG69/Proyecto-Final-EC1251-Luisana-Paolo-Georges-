@@ -23,7 +23,7 @@ def generador(Imp_V_fuente, voltaje, phi, vth, index_gen):
     
     p_generado = (voltaje_potencia * np.conjugate(corriente_generado)).real
     q_generado = (voltaje_potencia * np.conjugate(corriente_generado)).imag
-    print(np.sqrt(p_generado **2 + q_generado**2))
+    #print(np.sqrt(p_generado **2 + q_generado**2))
         
     return p_generado, q_generado
 #---------------------------------------------------- POTENCIA DE LA CARGA ------------------------------------------
@@ -39,7 +39,7 @@ def Cargas(imp_carga, Vth, bus_i_carga):
     
         p_carga = np.real(s_carga)
         q_carga = np.imag(s_carga)
-    print(np.sqrt(p_carga ** 2 + q_carga **2))
+    #print(np.sqrt(p_carga ** 2 + q_carga **2))
     return p_carga, q_carga
 
 #------------------------------------------------ LINEFLOW --------------------------------------------------------
@@ -61,8 +61,8 @@ def lineflow(indice_l, dato_lineas, voltline):
         corr_j = (v_j - v_i)*(admline[k])
         z_ij[k,0] = v_i * np.conjugate(corr_i)
         z_ji[k,0] = v_j * np.conjugate(corr_j)
-        print(round(v_i - v_j, 4), admline[k])
-        print(corr_i)
+        #print(round(v_i - v_j, 4), admline[k])
+        #print(corr_i)
 
     Pij = np.real(z_ij)
     Qij = np.imag(z_ij)
@@ -70,7 +70,7 @@ def lineflow(indice_l, dato_lineas, voltline):
     Qji = np.imag(z_ji)
     #print(f"{v_i} * conj(({v_i} - {v_j}) * {impline}) = {z_ij}")
     #print(cmath.polar(z_ij), "\n\n")
-    print(indice_l)
+    #print(indice_l)
     return Pij, Qij, Pji, Qji
 
 #-------------------------------------------------BALANCE DE POTENCIAS-------------------------------------------------
@@ -87,6 +87,6 @@ def balance(p_gen, q_gen, p_load, q_load):
 def perdidas(P_ij, Q_ij, P_ji, Q_ji):
 
     s_perdida = (P_ij + Q_ij*1j) + (P_ji + Q_ji*1j)
-    print(s_perdida)
+    #print(s_perdida)
 
     return s_perdida

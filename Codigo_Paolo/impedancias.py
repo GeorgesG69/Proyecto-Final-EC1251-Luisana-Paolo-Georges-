@@ -27,7 +27,7 @@ for x in range(len(imp_total_V)):
     if imp_total_V[x] == 0:
             imp_total_V[x] == (10**-9) * 1j
 
-print("Impedancia V:", imp_total_V)
+#print("Impedancia V:", imp_total_V)
 
 
 
@@ -55,7 +55,7 @@ for i in range(len(imp_total_I)):
     if imp_total_I[i] == 0:
         imp_total_I[i] == 0+(0.000001)*1j
 
-print("Impedancia I:", imp_total_I)
+#print("Impedancia I:", imp_total_I)
 
 
 
@@ -76,7 +76,7 @@ for b in range(len(ex.bus_i_Z)):
 
 imp_total_Z = imp_res_Z + imp_ind_Z + imp_cap_Z
 
-print("impedancia z:", imp_total_Z)
+#print("impedancia z:", imp_total_Z)
 
  
 
@@ -85,7 +85,7 @@ print("impedancia z:", imp_total_Z)
 for i in range(len(ex.des_V)):
     ex.des_V[i]= (ex.des_V[i] * math.pi)/180
 
-print(ex.des_V)
+#print(ex.des_V)
 
 # Matriz de iguales (Voltaje)
 

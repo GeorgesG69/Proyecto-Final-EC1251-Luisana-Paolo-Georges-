@@ -3,19 +3,19 @@ import numpy as np
 import Calculo_Impedancias
 import Calculo_Ybus
 import Calculo_Potencias
-import sys
+
 
 #Lectura del archivo excel a trabajar
-Dframe_V_fuente = pd.read_excel("data_io.xlsx", "V_fuente")         #V_Fuente (Fuente de voltaje)
-Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")             #I_fuente (Fuente de corriente)
-Dframe_Z = pd.read_excel("data_io.xlsx","Z")                      #Cargas
+       
+        
+                      
 Dframe_f_output = pd.read_excel("data_io.xlsx","f_and_ouput", header=None)
 
 #Colocar 0 en lugares vacíos
 
-Dframe_V_fuente.fillna(0, inplace=True)
-Dframe_I_fuente.fillna(0, inplace=True)
-Dframe_Z.fillna(0, inplace=True)
+
+
+
 
 #Cálculo de la velocidad angular en base a la frecuencia
 
@@ -24,16 +24,16 @@ Frecuencia = Dframe_f_output.iloc[0, 1]
 Vel_Ang = round(Frecuencia * 2 * np.pi)
 
 
-#Numero de nodos del sistema electrico de potencia
-Nro_Nodos_i = max(Dframe_Z.iloc[:,0])
-Nro_Nodos_j = max(Dframe_Z.iloc[:,1])
-Nro_Nodos = int(max(Nro_Nodos_i,Nro_Nodos_j))
+
 
 
 
 
 # Datos
 # -Fuente de voltaje:
+Dframe_V_fuente = pd.read_excel("data_io.xlsx", "V_fuente")
+Dframe_V_fuente.fillna(0, inplace=True)
+
 Res_V_fuente = np.array(Dframe_V_fuente.iloc[:, 4])                     #Resistencia de la V_fuente
 Ind_V_fuente = np.array(Dframe_V_fuente.iloc[:, 5]) * (10 ** -3)        #Inductancia de la V_fuente
 Cap_V_fuente = np.array(Dframe_V_fuente.iloc[:, 6]) * (10 ** -6)        #Capacitancia de la V_fuente
@@ -44,11 +44,14 @@ Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         #Nodo j 
 
 
 # -Fuente de corriente:
+Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")
+Dframe_I_fuente.fillna(0, inplace=True)
+
 Res_I_fuente = np.array(Dframe_I_fuente.iloc[:, 4])                     #Resistencia de la I_fuente
 Ind_I_fuente = np.array(Dframe_I_fuente.iloc[:, 5]) * (10 ** -3)        #Inductancia de la I_fuente
 Cap_I_fuente = np.array(Dframe_I_fuente.iloc[:, 6]) * (10 ** -6)        #Capacitancia de la I_fuente
 Desfase_I_fuente = np.array(Dframe_I_fuente.iloc[:, 3], dtype="float_") #Angulo de desfase I_fuente
-I_pico_I_fuente = np.array(Dframe_I_fuente.iloc[:, 2] / np.sqrt(2))                  #Voltaje pico de la I_fuente
+I_pico_I_fuente = np.array(Dframe_I_fuente.iloc[:, 2] / np.sqrt(2))     #Voltaje pico de la I_fuente
 Nodo_I_fuente_i = np.array(Dframe_I_fuente.iloc[:, 0])                  #Nodo i I_fuente
 Nodo_I_fuente_j = np.full((len(Dframe_I_fuente.iloc[:, 0])), 0)         #Nodo j I_fuente
 index_carga = np.concatenate(([Nodo_I_fuente_i], [Nodo_I_fuente_j]))    #Matriz de conexion de las cargas
@@ -56,28 +59,38 @@ index_carga = np.transpose(index_carga)
 
 
 # -Resistencias, inductancias y capacitancias
-Res_Z = np.array(Dframe_Z.iloc[:, 3])                     #Resistencia de Z
-Ind_Z = np.array(Dframe_Z.iloc[:, 4]) * (10 ** -6)        #Inductancia de Z
-Cap_Z = np.array(Dframe_Z.iloc[:, 5]) * (10 ** -6)        #Capacitancia de Z
-Nodo_Z_i = np.array(Dframe_Z.iloc[:, 0])                  #Nodo i Z
-Nodo_Z_j = np.array(Dframe_Z.iloc[:, 1])                  #Nodo j Z
-index_linea = np.concatenate(([Nodo_Z_i],[Nodo_Z_j]))     #Matriz de conexion de las cargas
+Dframe_Z = pd.read_excel("data_io.xlsx","Z")
+Dframe_Z.fillna(0, inplace=True)
+
+Res_Z = np.array(Dframe_Z.iloc[:, 3])                     
+Ind_Z = np.array(Dframe_Z.iloc[:, 4]) * (10 ** -6)        
+Cap_Z = np.array(Dframe_Z.iloc[:, 5]) * (10 ** -6)        
+Nodo_Z_i = np.array(Dframe_Z.iloc[:, 0])                  
+Nodo_Z_j = np.array(Dframe_Z.iloc[:, 1])                  
+
+index_linea = np.concatenate(([Nodo_Z_i],[Nodo_Z_j]))     
 index_linea = np.transpose(index_linea)
+
+# --Numero de nodos del SEP
+Nro_Nodos_i = max(Dframe_Z.iloc[:,0])
+Nro_Nodos_j = max(Dframe_Z.iloc[:,1])
+
+Nro_Nodos = int(max(Nro_Nodos_i,Nro_Nodos_j))
 
 
 def run():
-#---------------------------------------------- CALCULO DE LAS IMPEDANCIAS---------------------------------------------- 
+
     #Fuentes de voltaje
     Imp_V_fuente, Impres_v, Impind_v, Impcap_v = Calculo_Impedancias.V_fuente(Res_V_fuente, Ind_V_fuente, Cap_V_fuente, Vel_Ang, Nodo_V_fuente_i)
     V_fuente =  np.concatenate(([Nodo_V_fuente_i],[Nodo_V_fuente_j],[Imp_V_fuente]), axis=0)
     V_fuente = np.transpose(V_fuente)
-    #print(imp_gen)
+    
     
     #Fuentes de corriente
     Imp_I_fuente, Impres_i, Impind_i, impcap_i = Calculo_Impedancias.I_fuente(Res_I_fuente, Ind_I_fuente, Cap_I_fuente, Vel_Ang, Nodo_I_fuente_i)
     I_fuente = np.concatenate(([Nodo_I_fuente_i],[Nodo_I_fuente_j],[Imp_I_fuente]),axis=0)
     I_fuente = np.transpose(I_fuente)
-    #print(imp_carga)
+    
 
 
     #Ramas

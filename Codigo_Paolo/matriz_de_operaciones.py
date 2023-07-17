@@ -31,11 +31,11 @@ for k in range(filas):
     j = int(md.matriz_de_datos[k,1].real-1)
     if i == -1 or j == -1:
         if i == -1:
-                salida_bus[j,j] = salida_bus[j,j] + 1/md.matriz_de_datos[k,2]
+                salida_bus[j,j] = salida_bus[j,j] + np.round(1/md.matriz_de_datos[k,2], 4)
         elif j == -1:
-                salida_bus[i,i] = salida_bus[i,i] + 1/md.matriz_de_datos[k,2]
+                salida_bus[i,i] = salida_bus[i,i] + np.round(1/md.matriz_de_datos[k,2], 4)
 
-salida_bus = salida_bus
+salida_bus = np.round(salida_bus, 4)
 
 print(salida_bus)
 

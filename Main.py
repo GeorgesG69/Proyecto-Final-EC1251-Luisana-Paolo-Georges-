@@ -4,33 +4,16 @@ import Calculo_Impedancias
 import Calculo_Ybus
 import Calculo_Potencias
 
-
-#Lectura del archivo excel a trabajar
-       
-        
-                      
-Dframe_f_output = pd.read_excel("data_io.xlsx","f_and_ouput", header=None)
-
-#Colocar 0 en lugares vacíos
-
-
-
-
-
 #Cálculo de la velocidad angular en base a la frecuencia
+Dframe_f_output = pd.read_excel("data_io.xlsx","f_and_ouput", header=None)
 
 Frecuencia = Dframe_f_output.iloc[0, 1]
 
 Vel_Ang = round(Frecuencia * 2 * np.pi)
 
-
-
-
-
-
-
 # Datos
 # -Fuente de voltaje:
+
 Dframe_V_fuente = pd.read_excel("data_io.xlsx", "V_fuente")
 Dframe_V_fuente.fillna(0, inplace=True)
 
@@ -42,8 +25,8 @@ V_pico_V_fuente = np.array(Dframe_V_fuente.iloc[:, 2] / np.sqrt(2))             
 Nodo_V_fuente_i = np.array(Dframe_V_fuente.iloc[:, 0])                  #Nodo i V_fuente
 Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         #Nodo j V_fuente
 
-
 # -Fuente de corriente:
+
 Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")
 Dframe_I_fuente.fillna(0, inplace=True)
 
@@ -57,8 +40,8 @@ Nodo_I_fuente_j = np.full((len(Dframe_I_fuente.iloc[:, 0])), 0)         #Nodo j 
 index_carga = np.concatenate(([Nodo_I_fuente_i], [Nodo_I_fuente_j]))    #Matriz de conexion de las cargas
 index_carga = np.transpose(index_carga)
 
-
 # -Resistencias, inductancias y capacitancias
+
 Dframe_Z = pd.read_excel("data_io.xlsx","Z")
 Dframe_Z.fillna(0, inplace=True)
 

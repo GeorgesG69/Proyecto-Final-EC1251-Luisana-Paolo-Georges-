@@ -30,6 +30,8 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
+    #print(f"Pv: {P_V_fuente}")
+    #print(f"Qv: {Q_V_fuente}")
     
     return P_V_fuente, Q_V_fuente
                                 # -Potencias de las fuentes de corriente- #
@@ -52,6 +54,22 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
     
                                     # -Potencias de las impedancias- #
 
+def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
+    print(VThevenin)
+
+    S_Vf_Z = np.zeros((len(Nodo_i_Vfuente), 1), dtype="complex_")
+
+    for i in range(len(Nodo_i_Vfuente)):
+        print(VThevenin[Nodo_i_Vfuente[i] - 1])
+        S_Vf_Z[i] = ((np.sqrt(((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real ** 2) + ((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag ** 2))) ** 2) / np.conjugate(ImpVfuente[i])
+        print(S_Vf_Z[i])
+        #print(S_Vf_Z)
+
+    PZ_Vf = S_Vf_Z.real
+    QZ_Vf = S_Vf_Z.imag
+
+    return PZ_Vf, QZ_Vf
+
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
         
     S_Z = np.zeros((len(Impedancias_Z), 1), dtype="complex_")
@@ -62,34 +80,36 @@ def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
             
             if Indice_Rama[i, 1] == 0:
 
-                S_Z = (np.sqrt((V_thevenin[Indice_Rama[i, 0].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 0].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                
                 
 
             elif Indice_Rama[i, 0] == 0:
                  
-                S_Z = (np.sqrt((V_thevenin[Indice_Rama[i, 1].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 1] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 1].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 1] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
                 
 
-        else:
+        elif Indice_Rama[i, 1] != 0 or Indice_Rama[i, 0] != 0:
 
-            S_Z = np.sqrt(((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).real ** 2) + ((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).imag ** 2)) ** 2 / np.conjugate(Impedancias_Z[i])
+            S_Z[i] = np.sqrt(((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).real ** 2) + ((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).imag ** 2)) ** 2 / np.conjugate(Impedancias_Z[i])
             
     P_Z = S_Z.real
     Q_Z = S_Z.imag
-
+    #print(S_Z)
     return S_Z, P_Z, Q_Z  
     
                                         # -Balance de Potencias- #
 
-def Balance_Potencias(P_f_v, Q_f_v, P_Z, Q_Z):
+def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z):
 
-    P_V_Entregado = P_f_v.sum(axis=0)
-    Q_V_Entregado = Q_f_v.sum(axis=0)
+    P_V_Entregado = P_f_v.sum(axis=0) 
+    Q_V_Entregado = Q_f_v.sum(axis=0) 
 
-    P_Carga = P_Z.sum(axis=0)
-    q_carga = Q_Z.sum(axis=0)
+    P_Carga = P_Z.sum(axis=0)# + PzVf.sum(axis=0)
+    q_carga = Q_Z.sum(axis=0)# + QzVf.sum(axis=0)
 
     Delta_P = P_V_Entregado - P_Carga
     Delta_Q = Q_V_Entregado - q_carga
-
+   # print(Delta_P)
+    #print(Delta_Q)
     return Delta_P, Delta_Q

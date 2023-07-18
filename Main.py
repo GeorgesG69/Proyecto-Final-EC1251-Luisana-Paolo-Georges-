@@ -189,12 +189,15 @@ def Main_Analisis():
 
     P_V_fuente, Q_V_fuente = Calculo_Potencias.V_fuentes(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
 
+    # Potencia de la potencia de las impedancias de las fuentes de voltaje
+
+    Pzvf, Qzvf = Calculo_Potencias.Potencia_Z_Vf(V_pico_V_fuente, V_thevenin_rect, Imp_V_fuente, Nodo_V_fuente_i)
+
 
     # Potencia de las fuentes de corriente
 
     S_I_fuente, P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente, Nodo_I_fuente_i)
     
-    #print(f"{P_V_fuente}\n\n{Q_V_fuente}\n\n{P_I_fuente}\n\n{Q_I_fuente}")
     # Potencia de las impedancias.
 
     S_Z, P_Z, Q_Z = Calculo_Potencias.Potencias_Z(Indice_Rama, Imp_Z, V_thevenin_rect)
@@ -202,7 +205,7 @@ def Main_Analisis():
 
     # Balance de potencias.
 
-    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
+    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, Pzvf, Qzvf, P_Z, Q_Z)
 
 
                                                 # -Guardado de datos- #
@@ -244,8 +247,8 @@ def Main_Analisis():
     Dframe_SZ.to_excel(Escritor_Guardado, "S_Z", index=False)
 
     # -Balance S
-    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente + P_I_fuente)
-    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente + Q_I_fuente)
+    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente)# + P_I_fuente)
+    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente)# + Q_I_fuente)
     Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z)
     Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P
@@ -255,6 +258,8 @@ def Main_Analisis():
     
 
     Escritor_Guardado.close()
+
+    print("\n\tFinalizado.\n")
 
                                                 # -Copiado del archivo- #
 

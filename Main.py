@@ -18,7 +18,9 @@ Vel_Ang = round(Frecuencia * 2 * np.pi)
 # -Fuente de voltaje:
 
 Dframe_V_fuente = pd.read_excel("data_io.xlsx", "V_fuente")
+Valores_V_fuente = Dframe_V_fuente.astype(float, errors="ignore")
 Dframe_V_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
+DfWarnings_V = pd.DataFrame(Valores_V_fuente)
 
 Res_V_fuente = np.array(Dframe_V_fuente.iloc[:, 4])                     # Resistencia de la V_fuente.
 Ind_V_fuente = np.array(Dframe_V_fuente.iloc[:, 5]) * (10 ** -3)        # Inductancia de la V_fuente.

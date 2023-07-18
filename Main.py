@@ -205,7 +205,7 @@ def Main_Analisis():
 
     # Balance de potencias.
 
-    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, Pzvf, Qzvf, P_Z, Q_Z)
+    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Pzvf, Q_V_fuente,  Qzvf, P_Z, Q_Z)
 
 
                                                 # -Guardado de datos- #
@@ -249,8 +249,8 @@ def Main_Analisis():
     # -Balance S
     Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente)# + P_I_fuente)
     Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente)# + Q_I_fuente)
-    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z)
-    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z)
+    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z) + np.sum(Pzvf)
+    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z) + np.sum(Qzvf)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P
     Dframe_BalanceS.loc[0, "Delta Q total(VAr)"] = D_Q
 

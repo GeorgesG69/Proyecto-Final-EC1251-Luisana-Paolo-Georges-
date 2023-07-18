@@ -55,14 +55,14 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
                                     # -Potencias de las impedancias- #
 
 def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
-    print(VThevenin)
+    #print(VThevenin)
 
     S_Vf_Z = np.zeros((len(Nodo_i_Vfuente), 1), dtype="complex_")
 
     for i in range(len(Nodo_i_Vfuente)):
-        print(VThevenin[Nodo_i_Vfuente[i] - 1])
+        #print(VThevenin[Nodo_i_Vfuente[i] - 1])
         S_Vf_Z[i] = ((np.sqrt((((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real) ** 2) + (((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag) ** 2))) ** 2) / np.conjugate(ImpVfuente[i])
-        print(S_Vf_Z[i])
+        #print(S_Vf_Z[i])
         #print(S_Vf_Z)
 
     PZ_Vf = S_Vf_Z.real
@@ -102,14 +102,15 @@ def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
 
 def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z):
 
-    P_V_Entregado = P_f_v.sum(axis=0) 
-    Q_V_Entregado = Q_f_v.sum(axis=0) 
+    P_V_Entregado = np.sum(P_f_v) 
+    Q_V_Entregado = np.sum(Q_f_v) 
 
-    P_Carga = P_Z.sum(axis=0)# + PzVf.sum(axis=0)
-    q_carga = Q_Z.sum(axis=0)# + QzVf.sum(axis=0)
+    P_Impedancias = np.sum(P_Z) + np.sum(PzVf)
+    Q_Impedancias = np.sum(Q_Z) + np.sum(QzVf)
+    print(P_V_Entregado - P_Impedancias)
 
-    Delta_P = P_V_Entregado - P_Carga
-    Delta_Q = Q_V_Entregado - q_carga
+    Delta_P = np.round(P_V_Entregado - P_Impedancias, 4)
+    Delta_Q = np.round(Q_V_Entregado - Q_Impedancias, 4)
    # print(Delta_P)
     #print(Delta_Q)
     return Delta_P, Delta_Q

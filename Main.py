@@ -35,7 +35,9 @@ Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         # Nodo j
 # -Fuente de corriente:
 
 Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")
+Valores_I_fuente = Dframe_I_fuente.astype(float, errors="ignore")
 Dframe_I_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
+DfWarnings_I = pd.DataFrame(Valores_I_fuente)
 
 Res_I_fuente = np.array(Dframe_I_fuente.iloc[:, 4])                     # Resistencia de la I_fuente.
 Ind_I_fuente = np.array(Dframe_I_fuente.iloc[:, 5]) * (10 ** -3)        # Inductancia de la I_fuente.
@@ -52,7 +54,10 @@ index_carga = np.transpose(index_carga)
 # -Resistencias, inductancias y capacitancias:
 
 Dframe_Z = pd.read_excel("data_io.xlsx","Z")
+Valores_Z = Dframe_Z.astype(float, errors="ignore")
 Dframe_Z.fillna(0, inplace=True)    # Rellenar vacíos con 0.
+DfWarnings_Z = pd.DataFrame(Valores_Z)
+
 
 Res_Z = np.array(Dframe_Z.iloc[:, 3])                                   # Resistores.
 Ind_Z = np.array(Dframe_Z.iloc[:, 4]) * (10 ** -6)                      # Inductores.

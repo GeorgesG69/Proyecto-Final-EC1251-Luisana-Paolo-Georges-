@@ -117,7 +117,7 @@ for i in range(len(Nodo_I_fuente_i)):
 # -Z
 for i in range(len(Nodo_Z_i)):
 
-    if (Res_I_fuente[i] < 0) or (Ind_I_fuente[i] < 0) or (Cap_I_fuente[i] < 0):
+    if (Res_Z[i] < 0) or (Ind_Z[i] < 0) or (Cap_Z[i] < 0):
 
         Dframe_I_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
 

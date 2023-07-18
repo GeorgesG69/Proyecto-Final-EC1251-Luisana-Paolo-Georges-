@@ -2,6 +2,7 @@ import numpy as np
 import math
 
                                 # -Impedancias de las fuentes de voltaje- #
+
 def V_fuente(res_v_fuente, indc_v_fuente, cap_v_fuente, v_ang, bus_V):
 
     # Impedancia de V_fuente
@@ -31,8 +32,8 @@ def V_fuente(res_v_fuente, indc_v_fuente, cap_v_fuente, v_ang, bus_V):
     
     return Impedancia_V_fuente, Impd_resist_v, Impd_induct_v, Impd_capact_v
 
-
                                 # -Impedancias de las fuentes de corriente- #
+
 def I_fuente(res_i_fuente, indc_i_fuente, cap_i_fuente, v_ang, bus_I):
 
     Impd_resist_i = res_i_fuente
@@ -51,7 +52,8 @@ def I_fuente(res_i_fuente, indc_i_fuente, cap_i_fuente, v_ang, bus_I):
 
     Impedancia_I_fuente = Impd_resist_i + Impd_induct_i + Impd_capact_i
     
-#En caso de no haber una impedancia se añade una resistencia de 10^-6
+    # En caso de no haber una impedancia se añade una resistencia de 10^-6
+
     for i in range(len(Impedancia_I_fuente)):
 
         if Impedancia_I_fuente[i] == 0:
@@ -60,6 +62,7 @@ def I_fuente(res_i_fuente, indc_i_fuente, cap_i_fuente, v_ang, bus_I):
     return Impedancia_I_fuente, Impd_resist_i, Impd_induct_i, Impd_capact_i
 
                     # -Impedancias de los elementos resistivos, capacitivos e inductivos- #
+
 def Z(Resis_Z, Indc_Z, Cap_Z, V_ang, Bus_Z):
 
     Imp_Resis_Z = Resis_Z
@@ -80,7 +83,7 @@ def Z(Resis_Z, Indc_Z, Cap_Z, V_ang, Bus_Z):
     
     return Impedancia_Z, Imp_Resis_Z, Imp_Ind_Z, Imp_Cap_Z
 
-                                            # -CORRIENTES INYECTADAS- #
+                                            # -Vector de corrientes- #
 def Matriz_Corrientes(Voltaje, Desface_v, Impedancia_v, Nro_nodos, Nodo_v_i):
     
     # Grados a radianes.
@@ -89,7 +92,9 @@ def Matriz_Corrientes(Voltaje, Desface_v, Impedancia_v, Nro_nodos, Nodo_v_i):
 
     # Corrientes inyectadas.
     Vec_Corrientes = np.zeros((Nro_nodos,1), dtype="complex_")
+    
     for i in range(len(Nodo_v_i)):
+
         indice = Nodo_v_i[i]-1
         
         Vec_Corrientes[indice] = Voltaje[i]*(math.cos(Desface_v[i]) + 1j*math.sin(Desface_v[i]))/Impedancia_v[i] 

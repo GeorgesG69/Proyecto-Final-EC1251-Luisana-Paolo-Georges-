@@ -2,79 +2,83 @@ import numpy as np
 import cmath
 import math
 
-#------------------------------------------------------- Y BUS ---------------------------------------------------------
+                                                # -Matríz Ybus- #
 def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
-    matriz_dato = np.concatenate([V_fuentes, I_fuentes, Zs], axis=0)
+
+    Datos_Entrada = np.concatenate([V_fuentes, I_fuentes, Zs], axis=0)
     
-    salida_bus = np.zeros((Nro_Nodos, Nro_Nodos),dtype="complex_")
+    Ybus_Salida = np.zeros((Nro_Nodos, Nro_Nodos), dtype="complex_")
 
-    filas, columnas = matriz_dato.shape
+    filas, columnas = Datos_Entrada.shape
 
-#admitancias de las lineas (fuera de la diagonal)
+    # Admitancias fuera de la diagonal.
+
     for k in range(filas):
-        i = int(matriz_dato[k,0].real-1)
-        j = int(matriz_dato[k,1].real-1)
+
+        i = int(Datos_Entrada[k,0].real-1)
+        j = int(Datos_Entrada[k,1].real-1)
         
         if i == -1 or j == -1:
+
             continue
+
         else:
                         
-            salida_bus[i,j] = salida_bus[i,j] + (-1)/(matriz_dato[k,2])
-            salida_bus[j,i] = salida_bus[i,j]
+            Ybus_Salida[i,j] = Ybus_Salida[i,j] + (-1)/(Datos_Entrada[k,2])
+            Ybus_Salida[j,i] = Ybus_Salida[i,j]
 
-    
-    
-#admitancias de la diagonal
-    aux = salida_bus.sum(axis=1)
-    
-    aux = np.diag(aux)
-    
-    salida_bus = salida_bus - aux
-    
+    # Admitancias de la diagonal.
 
+    Matriz_Auxiliar = Ybus_Salida.sum(axis=1)
+    Matriz_Auxiliar = np.diag(Matriz_Auxiliar)
+    
+    Ybus_Salida = Ybus_Salida - Matriz_Auxiliar
+    
     for k in range(filas):
-        i = int(matriz_dato[k,0].real-1)
-        j = int(matriz_dato[k,1].real-1)
-        
+
+        i = int(Datos_Entrada[k,0].real-1)
+        j = int(Datos_Entrada[k,1].real-1)
         
         if i == -1 or j == -1:
+
             if i == -1:
                     
-                salida_bus[j,j] = salida_bus[j,j] + np.round(1/matriz_dato[k,2],4)
+                Ybus_Salida[j,j] = Ybus_Salida[j,j] + np.round(1/Datos_Entrada[k,2],4)
+
             elif j == -1:
                 
-                salida_bus[i,i] = salida_bus[i,i] + np.round(1/matriz_dato[k,2],4)
+                Ybus_Salida[i,i] = Ybus_Salida[i,i] + np.round(1/Datos_Entrada[k,2],4)
                 
-
-
-
-    salida_bus = np.round(salida_bus,4)
+    Ybus_Salida = np.round(Ybus_Salida,4)
     
+    return Ybus_Salida
 
-    return salida_bus
+                                                        # -Zth- #
+def Zth(Ybus):
 
-#--------------------------------------------------- Z Thevenin ----------------------------------------------------
-def Zth(y_bus):
-    z_bus = np.linalg.inv(y_bus)
-    zth = np.diag(z_bus)
-    return zth, z_bus
+    Zbus = np.linalg.inv(Ybus)
 
-#----------------------------------------------------- V Thevenin ---------------------------------------------------
-def Vth(z_bus, corrientes, num_barra):
-    vth = np.dot(z_bus, corrientes)
-    matriz_thevenin = np.zeros((num_barra,2))
+    Zth = np.diag(Zbus)
+
+    return Zth, Zbus
+
+                                                        # -Vth- #
+def Vth(Zbus, corrientes, num_barra):
+
+    V_thevenin = np.dot(Zbus, corrientes)
+
+    Matriz_Vth_Polar = np.zeros((num_barra, 2))
     
-
-#Forma polar    
-    for i in range(num_barra):
-        matriz_thevenin[i,0],matriz_thevenin[i,1] = cmath.polar(vth[i])
+    # Forma polar.
         
-
-#Radianes a grados
     for i in range(num_barra):
-        matriz_thevenin[i,1] = matriz_thevenin[i,1]*180/math.pi
+
+        Matriz_Vth_Polar[i,0],Matriz_Vth_Polar[i,1] = cmath.polar(V_thevenin[i])
         
-    return matriz_thevenin,vth
+    # Radianes a grados.
 
+    for i in range(num_barra):
 
-
+        Matriz_Vth_Polar[i,1] = Matriz_Vth_Polar[i,1]*180/math.pi
+        
+    return Matriz_Vth_Polar, V_thevenin

@@ -120,7 +120,7 @@ def Main_Analisis():
 
     V_thevenin, V_thevenin_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
     
-
+    
                                                 # -Cálculo de las potencias- #
 
     # Potencia del generador.
@@ -133,14 +133,9 @@ def Main_Analisis():
     P_Z, Q_Z  = Calculo_Potencias.Potencias_Z(Imp_Z, V_thevenin_rect, Nodo_Z_i)
 
 
-    # Flujo de potencias.
-
-    p_ij, q_ij, p_ji, q_ji = Calculo_Potencias.lineflow(Indice_Rama, Dato_Ramas, V_thevenin_rect)
-
-
     # Balance de potencias.
 
-    delta_p, delta_q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
+    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
     
 
 if __name__ == "__main__":

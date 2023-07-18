@@ -66,4 +66,3 @@ def Balance_Potencias(P_f_v, Q_f_v, P_Z, Q_Z):
     Delta_Q = Q_V_Entregado - q_carga
 
     return Delta_P, Delta_Q
-

@@ -61,7 +61,7 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
 
     for i in range(len(Nodo_i_Vfuente)):
         print(VThevenin[Nodo_i_Vfuente[i] - 1])
-        S_Vf_Z[i] = ((np.sqrt(((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real ** 2) + ((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag ** 2))) ** 2) / np.conjugate(ImpVfuente[i])
+        S_Vf_Z[i] = ((np.sqrt((((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real) ** 2) + (((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag) ** 2))) ** 2) / np.conjugate(ImpVfuente[i])
         print(S_Vf_Z[i])
         #print(S_Vf_Z)
 

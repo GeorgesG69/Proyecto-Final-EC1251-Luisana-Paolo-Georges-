@@ -80,5 +80,5 @@ def Vth(Zbus, corrientes, num_barra):
     for i in range(num_barra):
 
         Matriz_Vth_Polar[i,1] = Matriz_Vth_Polar[i,1]*180/math.pi
-            
+    
     return Matriz_Vth_Polar, V_thevenin

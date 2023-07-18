@@ -30,10 +30,10 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
-        
+    
     return P_V_fuente, Q_V_fuente
                                 # -Potencias de las fuentes de corriente- #
-'''
+
 def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
 
     Voltaje_I_Fuente = np.zeros(len(Bus_I_i), dtype="complex_")
@@ -49,7 +49,7 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
     Q_I_fuente = S_I_Fuente.imag
 
     return S_I_Fuente, P_I_fuente, Q_I_fuente
-    '''
+    
                                     # -Potencias de las impedancias- #
 
 def Potencias_Z(Imp_Z, Vth, Bus_i_Z):

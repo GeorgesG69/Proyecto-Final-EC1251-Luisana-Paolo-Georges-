@@ -33,7 +33,7 @@ Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         # Nodo j
 # -Fuente de corriente:
 
 Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")
-#Dframe_I_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
+Dframe_I_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
 
 Res_I_fuente = np.array(Dframe_I_fuente.iloc[:, 4])                     # Resistencia de la I_fuente.
 Ind_I_fuente = np.array(Dframe_I_fuente.iloc[:, 5]) * (10 ** -3)        # Inductancia de la I_fuente.
@@ -98,7 +98,7 @@ for i in range(len(Nodo_V_fuente_i)):
         Dframe_V_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
 
         raise TypeError("(V) Res/Ind/Cap no puede ser negativo.")
-    ''''
+
 # -I fuente
 for i in range(len(Nodo_I_fuente_i)):
 
@@ -113,7 +113,7 @@ for i in range(len(Nodo_I_fuente_i)):
         Dframe_I_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
 
         raise TypeError("(I) Res/Ind/Cap no puede ser negativo.")
-'''
+
 # -Z
 for i in range(len(Nodo_Z_i)):
 
@@ -157,7 +157,7 @@ def Main_Analisis():
 
     # Corrientes inyectadas.
 
-    Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, I_pico_I_fuente,  Desfase_V_fuente, Desfase_I_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i)
+    Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, I_pico_I_fuente,  Desfase_V_fuente, Desfase_I_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i, Nodo_I_fuente_i)
     
 
     # Ybus.
@@ -185,9 +185,9 @@ def Main_Analisis():
 
     # Potencia de las fuentes de corriente
 
-    #S_I_fuente, P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente)
+    S_I_fuente, P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente, Nodo_I_fuente_i)
     
-
+    #print(f"{P_V_fuente}\n\n{Q_V_fuente}\n\n{P_I_fuente}\n\n{Q_I_fuente}")
     # Potencia de las impedancias.
 
     P_Z, Q_Z  = Calculo_Potencias.Potencias_Z(Imp_Z, V_thevenin_rect, Nodo_Z_i)
@@ -237,8 +237,8 @@ def Main_Analisis():
     Dframe_SZ.to_excel(Escritor_Guardado, "S_Z", index=False)
 
     # -Balance S
-    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente)# + P_I_fuente)
-    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente)# + Q_I_fuente)
+    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente + P_I_fuente)
+    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente + Q_I_fuente)
     Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z)
     Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P

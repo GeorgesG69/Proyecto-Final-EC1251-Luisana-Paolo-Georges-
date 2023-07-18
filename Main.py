@@ -90,12 +90,15 @@ for i in range(len(Nodo_V_fuente_i)):
 
         Dframe_V_fuente.iloc[i, 1] = "V pico no puede ser negativo."
         Dframe_V_fuente.to_excel(Escritor_Warnings, "V_fuente", index=False)
+        Escritor_Warnings.close()
 
         raise TypeError("V pico no puede ser negativo.")
 
     if (Res_V_fuente[i] < 0) or (Ind_V_fuente[i] < 0) or (Cap_V_fuente[i] < 0):
 
         Dframe_V_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
+        Dframe_V_fuente.to_excel(Escritor_Warnings, "V_fuente", index=False)
+        Escritor_Warnings.close()
 
         raise TypeError("(V) Res/Ind/Cap no puede ser negativo.")
 
@@ -105,12 +108,16 @@ for i in range(len(Nodo_I_fuente_i)):
     if (I_pico_I_fuente[i] < 0):
 
         Dframe_I_fuente.iloc[i, 1] = "I pico no puede ser negativo."
+        Dframe_I_fuente.to_excel(Escritor_Warnings, "I_fuente", index=False)
+        Escritor_Warnings.close()
 
         raise TypeError("I pico no puede ser negativo.")
 
     if (Res_I_fuente[i] < 0) or (Ind_I_fuente[i] < 0) or (Cap_I_fuente[i] < 0):
 
         Dframe_I_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
+        Dframe_Z.to_excel(Escritor_Warnings, "Z", index=False)
+        Escritor_Warnings.close()
 
         raise TypeError("(I) Res/Ind/Cap no puede ser negativo.")
 

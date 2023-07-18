@@ -34,7 +34,7 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
     return P_V_fuente, Q_V_fuente
                                 # -Potencias de las fuentes de corriente- #
 
-def I_fuentes(Corriente_I_fuente, V_Thevenin):
+def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente):
     pass
                                     # -Potencias de las impedancias- #
 

@@ -130,7 +130,7 @@ def Main_Analisis():
 
     # Potencia de las fuentes de corriente
 
-    P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuente(I_pico_I_fuente, V_thevenin_rect)
+    P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente)
     
 
     # Potencia de las impedancias.

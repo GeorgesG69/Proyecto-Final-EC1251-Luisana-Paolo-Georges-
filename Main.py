@@ -102,7 +102,7 @@ def Main_Analisis():
 
     # Corrientes inyectadas.
 
-    Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, Desfase_V_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i)
+    Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, I_pico_I_fuente,  Desfase_V_fuente, Desfase_I_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i)
     
 
     # Ybus.
@@ -123,9 +123,14 @@ def Main_Analisis():
 
                                                 # -Cálculo de las potencias- #
 
-    # Potencia del generador.
+    # Potencia de las fuentes de voltaje.
 
-    P_V_fuente, Q_V_fuente= Calculo_Potencias.V_fuentes(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
+    P_V_fuente, Q_V_fuente = Calculo_Potencias.V_fuentes(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
+
+
+    # Potencia de las fuentes de corriente
+
+    P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuente(I_pico_I_fuente, V_thevenin_rect)
     
 
     # Potencia de las impedancias.

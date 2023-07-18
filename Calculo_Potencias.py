@@ -2,7 +2,7 @@ import numpy as np
 import math
 import cmath
 
-                                            # -Potencias de las fuentes de voltaje- #
+                                    # -Potencias de las fuentes de voltaje- #
 def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
 
     
@@ -32,6 +32,10 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
         
     return P_V_fuente, Q_V_fuente
+                                # -Potencias de las fuentes de corriente- #
+
+def I_fuentes(Corriente_I_fuente, V_Thevenin):
+    pass
                                     # -Potencias de las impedancias- #
 
 def Potencias_Z(Imp_Z, Vth, Bus_i_Z):

@@ -53,16 +53,25 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
                                     # -Potencias de las impedancias- #
 
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
-
+    print(Indice_Rama)
+    print(Impedancias_Z)
+    
     S_Z = np.zeros((len(Impedancias_Z), 1), dtype="complex_")
 
     for i in range(len(Impedancias_Z)):
 
-        S_Z = V_thevenin[Indice_Rama[]]
+        if Indice_Rama[i, 1] == 0:
 
+            S_Z = V_thevenin[Indice_Rama[i, 0] - 1] ** 2 / np.conjugate(Impedancias_Z[i])
+            print(S_Z)
+
+        else:
+
+            S_Z = (V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]) ** 2 / np.conjugate(Impedancias_Z[i])
+            print(S_Z)
     
 
-    print(Indice_Rama[0, 1])
+    
     
 
                                         # -Balance de Potencias- #

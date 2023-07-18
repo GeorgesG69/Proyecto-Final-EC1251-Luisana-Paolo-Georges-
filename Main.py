@@ -120,7 +120,7 @@ def Main_Analisis():
 
     V_thevenin, V_thevenin_rect = Calculo_Ybus.Vth(zbus, Vector_Corrientes_I, Nro_Nodos)
     
-    
+
                                                 # -Cálculo de las potencias- #
 
     # Potencia del generador.

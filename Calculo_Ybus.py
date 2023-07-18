@@ -50,7 +50,7 @@ def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
                 Ybus_Salida[i,i] = Ybus_Salida[i,i] + np.round(1/Datos_Entrada[k,2],4)
                 
     Ybus_Salida = np.round(Ybus_Salida,4)
-    
+        
     return Ybus_Salida
 
                                                         # -Zth- #
@@ -80,5 +80,5 @@ def Vth(Zbus, corrientes, num_barra):
     for i in range(num_barra):
 
         Matriz_Vth_Polar[i,1] = Matriz_Vth_Polar[i,1]*180/math.pi
-        
+            
     return Matriz_Vth_Polar, V_thevenin

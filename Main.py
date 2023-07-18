@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import shutil
 import Calculo_Impedancias
 import Calculo_Ybus
 import Calculo_Potencias
@@ -22,15 +23,17 @@ Dframe_V_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
 Res_V_fuente = np.array(Dframe_V_fuente.iloc[:, 4])                     # Resistencia de la V_fuente.
 Ind_V_fuente = np.array(Dframe_V_fuente.iloc[:, 5]) * (10 ** -3)        # Inductancia de la V_fuente.
 Cap_V_fuente = np.array(Dframe_V_fuente.iloc[:, 6]) * (10 ** -6)        # Capacitancia de la V_fuente.
+
 Desfase_V_fuente = np.array(Dframe_V_fuente.iloc[:, 3], dtype="float_") # Angulo de desfase V_fuente.
 V_pico_V_fuente = np.array(Dframe_V_fuente.iloc[:, 2] / np.sqrt(2))     # Voltaje pico de la V_fuente.
+
 Nodo_V_fuente_i = np.array(Dframe_V_fuente.iloc[:, 0])                  # Nodo i V_fuente.
 Nodo_V_fuente_j = np.full((len(Dframe_V_fuente.iloc[:, 0])), 0)         # Nodo j V_fuente.
 
 # -Fuente de corriente:
 
 Dframe_I_fuente = pd.read_excel("data_io.xlsx","I_fuente")
-Dframe_I_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
+#Dframe_I_fuente.fillna(0, inplace=True)    # Rellenar vacíos con 0.
 
 Res_I_fuente = np.array(Dframe_I_fuente.iloc[:, 4])                     # Resistencia de la I_fuente.
 Ind_I_fuente = np.array(Dframe_I_fuente.iloc[:, 5]) * (10 ** -3)        # Inductancia de la I_fuente.
@@ -56,6 +59,13 @@ Cap_Z = np.array(Dframe_Z.iloc[:, 5]) * (10 ** -6)                      # Capaci
 Nodo_Z_i = np.array(Dframe_Z.iloc[:, 0])                                # Bus i.
 Nodo_Z_j = np.array(Dframe_Z.iloc[:, 1])                                # Bus j.
 
+                                          # -Dataframes para guardado- #
+
+Dframe_VZth = pd.read_excel("data_io.xlsx","VTH_AND_ZTH")
+Dframe_Sfuente = pd.read_excel("data_io.xlsx","Sfuente")
+Dframe_SZ = pd.read_excel("data_io.xlsx","S_Z")
+Dframe_BalanceS = pd.read_excel("data_io.xlsx","Balance_S")
+
                                             # -Indices de las ramas- #
 
 Indice_Rama = np.concatenate(([Nodo_Z_i],[Nodo_Z_j]))     
@@ -68,6 +78,51 @@ Nro_Nodos_i = max(Dframe_Z.iloc[:,0])
 Nro_Nodos_j = max(Dframe_Z.iloc[:,1])
 
 Nro_Nodos = int(max(Nro_Nodos_i,Nro_Nodos_j))
+
+                                                # -Warnings- #
+
+Escritor_Warnings = pd.ExcelWriter("data_io.xlsx", mode="a", if_sheet_exists="overlay")
+
+# -V fuente
+for i in range(len(Nodo_V_fuente_i)):
+
+    if (V_pico_V_fuente[i] < 0):
+
+        Dframe_V_fuente.iloc[i, 1] = "V pico no puede ser negativo."
+        Dframe_V_fuente.to_excel(Escritor_Warnings, "V_fuente", index=False)
+
+        raise TypeError("V pico no puede ser negativo.")
+
+    if (Res_V_fuente[i] < 0) or (Ind_V_fuente[i] < 0) or (Cap_V_fuente[i] < 0):
+
+        Dframe_V_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
+
+        raise TypeError("(V) Res/Ind/Cap no puede ser negativo.")
+    ''''
+# -I fuente
+for i in range(len(Nodo_I_fuente_i)):
+
+    if (I_pico_I_fuente[i] < 0):
+
+        Dframe_I_fuente.iloc[i, 1] = "I pico no puede ser negativo."
+
+        raise TypeError("I pico no puede ser negativo.")
+
+    if (Res_I_fuente[i] < 0) or (Ind_I_fuente[i] < 0) or (Cap_I_fuente[i] < 0):
+
+        Dframe_I_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
+
+        raise TypeError("(I) Res/Ind/Cap no puede ser negativo.")
+'''
+# -Z
+for i in range(len(Nodo_Z_i)):
+
+    if (Res_I_fuente[i] < 0) or (Ind_I_fuente[i] < 0) or (Cap_I_fuente[i] < 0):
+
+        Dframe_I_fuente.iloc[i, 1] = "Res/Ind/Cap no puede ser negativo."
+
+        raise TypeError("(Z) Res/Ind/Cap no puede ser negativo.")
+
 
                         # -Inicio de los cálculos para el análisis del Circuito en AC- #
 def Main_Analisis():
@@ -113,7 +168,7 @@ def Main_Analisis():
 
     # Zth.
 
-    zth, zbus = Calculo_Ybus.Zth(y_bus)
+    Zth, zbus = Calculo_Ybus.Zth(y_bus)
 
 
     # Vth.
@@ -130,7 +185,7 @@ def Main_Analisis():
 
     # Potencia de las fuentes de corriente
 
-    P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente)
+    #S_I_fuente, P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente)
     
 
     # Potencia de las impedancias.
@@ -141,7 +196,64 @@ def Main_Analisis():
     # Balance de potencias.
 
     D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
+
+
+                                                # -Guardado de datos- #
+
+    Escritor_Guardado = pd.ExcelWriter("data_io.xlsx", mode="a", if_sheet_exists="overlay")
+
+    # -Vth y Zth
+    Modulo_Vth = np.sqrt((V_thevenin_rect.real ** 2) + (V_thevenin_rect.imag ** 2))
+    Angulo_Vth = np.arctan(V_thevenin_rect.imag / V_thevenin_rect.real)
+
+    for i in range(len(Modulo_Vth)):
+
+        Dframe_VZth.loc[i, "Bus i"] = i + 1
+        Dframe_VZth.loc[i, "|Vth| (kV)"] = Modulo_Vth[i]
+        Dframe_VZth.loc[i, "<Vth (degrees)"] = Angulo_Vth[i]
+        Dframe_VZth.loc[i, "Rth (ohms)"] = Zth[i].real
+        Dframe_VZth.loc[i, "Xth (ohms)"] = Zth[i].imag
+
+    Dframe_VZth.to_excel(Escritor_Guardado, "VTH_AND_ZTH", index=False)
+
+    # -Sfuente
+    for i in range(len(Nodo_V_fuente_i)):
+
+        Dframe_Sfuente.loc[i, "Bus i"] = Nodo_V_fuente_i[i]
+        Dframe_Sfuente.loc[i, "Bus j"] = Nodo_V_fuente_j[i]
+        Dframe_Sfuente.loc[i, "P [W]"] = P_V_fuente[i]
+        Dframe_Sfuente.loc[i, "Q [VAr]"] = Q_V_fuente[i]
+
+    Dframe_Sfuente.to_excel(Escritor_Guardado, "Sfuente", index=False)
+
+    # -S_Z
+    for i in range(len(P_Z)):
+
+        Dframe_SZ.loc[i, "Bus i"] = Nodo_Z_i[i]
+        Dframe_SZ.loc[i, "Bus j"] = Nodo_Z_j[i]
+        Dframe_SZ.loc[i, "P [W]"] = P_Z[i]
+        Dframe_SZ.loc[i, "Q [Var]"] = Q_Z[i]
+
+    Dframe_SZ.to_excel(Escritor_Guardado, "S_Z", index=False)
+
+    # -Balance S
+    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente)# + P_I_fuente)
+    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente)# + Q_I_fuente)
+    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z)
+    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z)
+    Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P
+    Dframe_BalanceS.loc[0, "Delta Q total(VAr)"] = D_Q
+
+    Dframe_BalanceS.to_excel(Escritor_Guardado, "Balance_S", index=False)
     
+
+    Escritor_Guardado.close()
+
+                                                # -Copiado del archivo- #
+
+    FileName = Dframe_f_output.iloc[1, 1]
+
+    shutil.copy2("data_io.xlsx", FileName)
 
 if __name__ == "__main__":
 

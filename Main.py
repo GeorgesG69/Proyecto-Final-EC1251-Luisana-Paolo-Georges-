@@ -197,12 +197,12 @@ def Main_Analisis():
     #print(f"{P_V_fuente}\n\n{Q_V_fuente}\n\n{P_I_fuente}\n\n{Q_I_fuente}")
     # Potencia de las impedancias.
 
-    P_Z, Q_Z  = Calculo_Potencias.Potencias_Z(Imp_Z, V_thevenin_rect, Nodo_Z_i)
+    Calculo_Potencias.Potencias_Z(Indice_Rama, Imp_Z, V_thevenin_rect)
 
 
     # Balance de potencias.
 
-    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente, P_Z, Q_Z)
+    #D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Q_V_fuente)#, P_Z, Q_Z)
 
 
                                                 # -Guardado de datos- #

@@ -53,38 +53,43 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
                                     # -Potencias de las impedancias- #
 
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
-    print(Indice_Rama)
-    print(Impedancias_Z)
-    
+        
     S_Z = np.zeros((len(Impedancias_Z), 1), dtype="complex_")
 
     for i in range(len(Impedancias_Z)):
 
-        if Indice_Rama[i, 1] == 0:
+        if Indice_Rama[i, 1] == 0 or Indice_Rama[i, 0] == 0:
+            
+            if Indice_Rama[i, 1] == 0:
 
-            S_Z = V_thevenin[Indice_Rama[i, 0] - 1] ** 2 / np.conjugate(Impedancias_Z[i])
-            print(S_Z)
+                S_Z = (np.sqrt((V_thevenin[Indice_Rama[i, 0].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                
+
+            elif Indice_Rama[i, 0] == 0:
+                 
+                S_Z = (np.sqrt((V_thevenin[Indice_Rama[i, 1].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 1] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                
 
         else:
 
-            S_Z = (V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]) ** 2 / np.conjugate(Impedancias_Z[i])
-            print(S_Z)
-    
+            S_Z = np.sqrt(((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).real ** 2) + ((V_thevenin[Indice_Rama[i, 1] - 1] - V_thevenin[Indice_Rama[i, 0] - 1]).imag ** 2)) ** 2 / np.conjugate(Impedancias_Z[i])
+            
+    P_Z = S_Z.real
+    Q_Z = S_Z.imag
 
+    return S_Z, P_Z, Q_Z  
     
-    
-
                                         # -Balance de Potencias- #
 
-def Balance_Potencias(P_f_v, Q_f_v):#, P_Z, Q_Z):
+def Balance_Potencias(P_f_v, Q_f_v, P_Z, Q_Z):
 
     P_V_Entregado = P_f_v.sum(axis=0)
     Q_V_Entregado = Q_f_v.sum(axis=0)
 
-    #P_Carga = P_Z.sum(axis=0)
-    #q_carga = Q_Z.sum(axis=0)
+    P_Carga = P_Z.sum(axis=0)
+    q_carga = Q_Z.sum(axis=0)
 
-    #Delta_P = P_V_Entregado - P_Carga
-    #Delta_Q = Q_V_Entregado - q_carga
+    Delta_P = P_V_Entregado - P_Carga
+    Delta_Q = Q_V_Entregado - q_carga
 
-    #return Delta_P, Delta_Q
+    return Delta_P, Delta_Q

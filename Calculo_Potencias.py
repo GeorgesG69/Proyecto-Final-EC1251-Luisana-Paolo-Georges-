@@ -21,8 +21,10 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
     for i in range(len(Voltaje_Pico)):
 
         Indice_Vth = Indice_V_fuente[i] - 1
-        Voltaje_Potencia[i,0] = Vth[Indice_Vth,0]
-        Voltaje_Impedancia = Voltajes_Fuente[i,0] - Vth[Indice_Vth,0]
+
+        Voltaje_Potencia[i,0] = Vth[Indice_Vth, 0]
+        Voltaje_Impedancia = Voltajes_Fuente[i, 0] - Vth[Indice_Vth, 0]
+        
         Corrientes_V_fuentes[i,0] = Voltaje_Impedancia / Imp_V_fuente[i]
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real

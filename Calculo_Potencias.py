@@ -59,17 +59,17 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
     S_Vf_Z = np.zeros((len(Nodo_i_Vfuente), 1), dtype="complex_")
 
     for i in range(len(Nodo_i_Vfuente)):
-        print(VThevenin[Nodo_i_Vfuente[i] - 1])
+        
         a = (VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real
         b = (VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag
-        Modulo = np.sqrt((a ** 2) + (b ** 2))
-
+        Modulo = abs((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]))
+        
         S_Vf_Z[i] = Modulo ** 2 / np.conjugate(ImpVfuente[i])
         #print(S_Vf_Z[i])
 
     PZ_Vf = S_Vf_Z.real
     QZ_Vf = S_Vf_Z.imag
-    print(S_Vf_Z)
+    
     return PZ_Vf, QZ_Vf
 
 def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):

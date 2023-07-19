@@ -203,7 +203,7 @@ def Main_Analisis():
     # Ybus.
 
     y_bus = Calculo_Ybus.Matriz_Y_Bus(V_fuente, I_fuente, Zs, Nro_Nodos, Nro_Nodos_i, Nro_Nodos_j) 
-    y_bus = np.round(y_bus,4)
+    #y_bus = np.round(y_bus,4)
     
 
     # Zth.

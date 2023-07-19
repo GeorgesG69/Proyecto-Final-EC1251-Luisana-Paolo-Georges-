@@ -24,7 +24,7 @@ def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
 
         else:
                         
-            Ybus_Salida[i,j] = Ybus_Salida[i,j] + (-1)/(Datos_Entrada[k,2])
+            Ybus_Salida[i,j] = Ybus_Salida[i,j] + (-1) / (Datos_Entrada[k,2])
             Ybus_Salida[j,i] = Ybus_Salida[i,j]
 
     # Admitancias de la diagonal.
@@ -36,20 +36,20 @@ def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
     
     for k in range(filas):
 
-        i = int(Datos_Entrada[k,0].real-1)
-        j = int(Datos_Entrada[k,1].real-1)
+        i = int(Datos_Entrada[k, 0].real - 1)
+        j = int(Datos_Entrada[k, 1].real - 1)
         
         if i == -1 or j == -1:
 
             if i == -1:
                     
-                Ybus_Salida[j,j] = Ybus_Salida[j,j] + np.round(1/Datos_Entrada[k,2],4)
+                Ybus_Salida[j,j] = Ybus_Salida[j, j] + (1 / Datos_Entrada[k, 2])
 
             elif j == -1:
                 
-                Ybus_Salida[i,i] = Ybus_Salida[i,i] + np.round(1/Datos_Entrada[k,2],4)
+                Ybus_Salida[i,i] = Ybus_Salida[i, i] + (1 / Datos_Entrada[k, 2])
                 
-    Ybus_Salida = np.round(Ybus_Salida,4)
+    #Ybus_Salida = np.round(Ybus_Salida,4)
         
     return Ybus_Salida
 

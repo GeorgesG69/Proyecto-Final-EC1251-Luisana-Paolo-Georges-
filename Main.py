@@ -248,7 +248,7 @@ def Main_Analisis():
                                                 # -Guardado de datos- #
 
     Escritor_Guardado = pd.ExcelWriter("data_io.xlsx", mode="a", if_sheet_exists="overlay")
-
+    
     # -Vth y Zth
     Modulo_Vth = np.sqrt((V_thevenin_rect.real ** 2) + (V_thevenin_rect.imag ** 2))
     Angulo_Vth = np.arctan(V_thevenin_rect.imag / V_thevenin_rect.real) * 180 / np.pi
@@ -265,12 +265,21 @@ def Main_Analisis():
 
     # -Sfuente
     for i in range(len(Nodo_V_fuente_i)):
-
+        
         Dframe_Sfuente.loc[i, "Bus i"] = Nodo_V_fuente_i[i]
         Dframe_Sfuente.loc[i, "Bus j"] = Nodo_V_fuente_j[i]
         Dframe_Sfuente.loc[i, "P [W]"] = P_V_fuente[i]
         Dframe_Sfuente.loc[i, "Q [VAr]"] = Q_V_fuente[i]
 
+    FilaIV, ColumnaIV = Dframe_Sfuente.shape 
+
+    for j in range(len(Nodo_I_fuente_i)):
+
+        Dframe_Sfuente.loc[FilaIV + j, "Bus i"] = Nodo_I_fuente_i[j]
+        Dframe_Sfuente.loc[FilaIV + j, "Bus j"] = Nodo_I_fuente_j[j]
+        Dframe_Sfuente.loc[FilaIV + j, "P [W]"] = P_I_fuente[j]
+        Dframe_Sfuente.loc[FilaIV + j, "Q [VAr]"] = Q_I_fuente[j]
+        
     Dframe_Sfuente.to_excel(Escritor_Guardado, "Sfuente", index=False)
 
     # -S_Z

@@ -179,7 +179,9 @@ def Main_Analisis():
     # Fuentes de corriente.
 
     Imp_I_fuente, Impres_i, Impind_i, impcap_i = Calculo_Impedancias.I_fuente(Res_I_fuente, Ind_I_fuente, Cap_I_fuente, Vel_Ang, Nodo_I_fuente_i)
+    
     I_fuente = np.concatenate(([Nodo_I_fuente_i], [Nodo_I_fuente_j], [Imp_I_fuente]), axis=0)
+    
     I_fuente = np.transpose(I_fuente)
     
 

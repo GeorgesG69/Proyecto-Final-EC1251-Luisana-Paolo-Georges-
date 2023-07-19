@@ -42,9 +42,8 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
 
     for i in range(len(Bus_I_i)):
 
-        Voltaje_I_Fuente[i] = V_Thevenin[i]
-
-        S_I_Fuente[i] =  Voltaje_I_Fuente[i] * np.conjugate(Corriente_I_fuente[i])
+        
+        S_I_Fuente[i] =   V_Thevenin[i] * np.conjugate(Corriente_I_fuente[i])
 
     P_I_fuente = S_I_Fuente.real
     Q_I_fuente = S_I_Fuente.imag
@@ -78,7 +77,7 @@ def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 
     for i in range(len(Nodo_i_Ifuente)):
 
-        S_If_Z[i] = (np.sqrt(Vthevenin[Nodo_i_Ifuente[i]-1].real ** 2 + Vthevenin[Nodo_i_Ifuente[i]-1].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente)
+        S_If_Z[i] = (np.sqrt(Vthevenin[Nodo_i_Ifuente[i]-1].real ** 2 + Vthevenin[Nodo_i_Ifuente[i]-1].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente[i])
 
     PZ_If = S_If_Z.real
     QZ_If = S_If_Z.imag

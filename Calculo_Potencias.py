@@ -24,7 +24,7 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
         Voltaje_Potencia[i,0] = Vth[Indice_Vth, 0]
         Voltaje_Impedancia = Voltajes_Fuente[i, 0] - Vth[Indice_Vth, 0]
-        
+
         Corrientes_V_fuentes[i,0] = Voltaje_Impedancia / Imp_V_fuente[i]
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
@@ -84,7 +84,7 @@ def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
         
     S_Z = np.zeros((len(Impedancias_Z), 1), dtype="complex_")
-    print(Indice_Rama)
+    
     for i in range(len(Impedancias_Z)):
 
         if Indice_Rama[i, 1] == 0 or Indice_Rama[i, 0] == 0:

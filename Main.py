@@ -251,7 +251,7 @@ def Main_Analisis():
 
     # -Vth y Zth
     Modulo_Vth = np.sqrt((V_thevenin_rect.real ** 2) + (V_thevenin_rect.imag ** 2))
-    Angulo_Vth = np.arctan(V_thevenin_rect.imag / V_thevenin_rect.real)
+    Angulo_Vth = np.arctan(V_thevenin_rect.imag / V_thevenin_rect.real) * 180 / np.pi
 
     for i in range(len(Modulo_Vth)):
 
@@ -286,8 +286,8 @@ def Main_Analisis():
     # -Balance S
     Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente) + np.sum(P_I_fuente)
     Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente) + np.sum(Q_I_fuente)
-    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z) + np.sum(Pzvf)
-    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z) + np.sum(Qzvf)
+    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z) + np.sum(Pzvf) + np.sum(Pzif)
+    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z) + np.sum(Qzvf) + np.sum(Qzif)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P
     Dframe_BalanceS.loc[0, "Delta Q total(VAr)"] = D_Q
 

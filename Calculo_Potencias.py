@@ -3,17 +3,15 @@ import math
 import cmath
 
                                     # -Potencias de las fuentes de voltaje- #
-def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
-
-    
+def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
     # Transformación del voltaje pico de las fuentes a forma rectangular.
 
     Voltajes_Fuente = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
 
     for i in range(len(Voltaje_Pico)):
-
-        Voltajes_Fuente[i,0] = Voltaje_Pico[i] * (math.cos(Desface[i])) + Voltaje_Pico[i] * (math.sin(Desface[i]) * 1j)
+        
+        Voltajes_Fuente[i,0] = Voltaje_Pico[i] * (math.cos(Desfase[i])) + Voltaje_Pico[i] * (math.sin(Desfase[i]) * 1j)
 
     Voltaje_Potencia = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
 
@@ -30,10 +28,9 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desface, Vth, Indice_V_fuente):
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
-    #print(f"Pv: {P_V_fuente}")
-    #print(f"Qv: {Q_V_fuente}")
-    
+        
     return P_V_fuente, Q_V_fuente
+
                                 # -Potencias de las fuentes de corriente- #
 
 def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
@@ -76,7 +73,7 @@ def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 
     for i in range(len(Nodo_i_Ifuente)):
 
-        S_If_Z[i] = (np.sqrt(Vthevenin[i].real ** 2 + Vthevenin[i].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente)
+        S_If_Z[i] = (np.sqrt(Vthevenin[Nodo_i_Ifuente[i]-1].real ** 2 + Vthevenin[Nodo_i_Ifuente[i]-1].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente)
 
     PZ_If = S_If_Z.real
     QZ_If = S_If_Z.imag
@@ -95,7 +92,6 @@ def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
 
                 S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 0].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
                 
-                
 
             elif Indice_Rama[i, 0] == 0:
                  
@@ -108,7 +104,7 @@ def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
             
     P_Z = S_Z.real
     Q_Z = S_Z.imag
-    #print(S_Z)
+    
     return S_Z, P_Z, Q_Z  
     
                                         # -Balance de Potencias- #
@@ -119,11 +115,20 @@ def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z, PIf, QIf, PzIf,QzIf):
     Q_V_Entregado = np.sum(Q_f_v) + np.sum(QIf)
 
     P_Impedancias = np.sum(P_Z) + np.sum(PzVf) + np.sum(PzIf)
-    Q_Impedancias = np.sum(Q_Z) + np.sum(QzVf) + np.sum(QzIf)
-    #print(P_V_Entregado - P_Impedancias)
+    Q_Impedancias = np.sum(Q_Z) + np.sum(QzVf) + np.sum(QzIf) 
 
     Delta_P = np.round(P_V_Entregado - P_Impedancias, 4)
     Delta_Q = np.round(Q_V_Entregado - Q_Impedancias, 4)
-   # print(Delta_P)
-    #print(Delta_Q)
+    
     return Delta_P, Delta_Q
+
+
+#print(f"Pv: {P_V_fuente}")
+#print(f"Qv: {Q_V_fuente}")
+#print(S_Z)
+
+#print(P_V_Entregado - P_Impedancias)
+
+
+#print(Delta_P)
+#print(Delta_Q)

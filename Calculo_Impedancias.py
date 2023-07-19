@@ -87,34 +87,23 @@ def Z(Resis_Z, Indc_Z, Cap_Z, V_ang, Bus_Z):
     return Impedancia_Z, Imp_Resis_Z, Imp_Ind_Z, Imp_Cap_Z
 
                                             # -Vector de corrientes- #
+                                            
 def Matriz_Corrientes(Voltaje, Corriente, Desface_v, Desface_I, Impedancia_v, Nro_nodos, Nodo_v_i, Nodo_I_i):
-    
-    # Grados a radianes.
-    for i in range(len(Desface_v)):
-        
-        Desface_v[i]= (Desface_v[i] * math.pi)/180
-        
-    for i in range(len(Desface_I)):
 
-        Desface_I[i]= (Desface_I[i] * math.pi)/180
-
-    # Corrientes inyectadas.
     Vec_Corrientes = np.zeros((Nro_nodos,1), dtype="complex_")
 
     for i in range(len(Nodo_v_i)):
 
         indice = Nodo_v_i[i]-1
-        #print(Voltaje)
-        #print(Desface_v[i])
+        Desface_v[i]= (Desface_v[i] * math.pi)/180
         Vec_Corrientes[indice] = (Voltaje[i] * (math.cos(Desface_v[i]) + 1j*math.sin(Desface_v[i])) / Impedancia_v[i]) 
 
     for i in range(len(Nodo_I_i)):
 
         indice2 = Nodo_I_i[i]-1
-
+        Desface_I[i]= (Desface_I[i] * math.pi)/180
         Vec_Corrientes[indice2] -= Corriente[i] * (math.cos(Desface_I[i]) + 1j*math.sin(Desface_I[i]))
         
     Vec_Corrientes = np.round(Vec_Corrientes,4)
-    print(Vec_Corrientes)
-    
+       
     return Vec_Corrientes

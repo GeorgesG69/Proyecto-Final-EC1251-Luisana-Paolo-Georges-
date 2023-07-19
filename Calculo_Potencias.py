@@ -30,25 +30,23 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
-    print("pv", P_V_fuente)
-    print("qv", Q_V_fuente)
+    
     return P_V_fuente, Q_V_fuente
 
                                 # -Potencias de las fuentes de corriente- #
 
 def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
-
+    
     Voltaje_I_Fuente = np.zeros(len(Bus_I_i), dtype="complex_")
     S_I_Fuente = np.zeros(len(Bus_I_i), dtype="complex_")
-
+    
     for i in range(len(Bus_I_i)):
-
         
-        S_I_Fuente[i] =   V_Thevenin[i] * np.conjugate(Corriente_I_fuente[i])
+        S_I_Fuente[i] =   V_Thevenin[Bus_I_i[i]-1] * np.conjugate(Corriente_I_fuente[i])
 
     P_I_fuente = S_I_Fuente.real
     Q_I_fuente = S_I_Fuente.imag
-    print("si", S_I_Fuente)
+    
     return S_I_Fuente, P_I_fuente, Q_I_fuente
     
                                     # -Potencias de las impedancias- #
@@ -72,17 +70,17 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
     
     return PZ_Vf, QZ_Vf
 
-def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
+def Potencia_Z_If(ICorriente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 
     S_If_Z = np.zeros((len(Nodo_i_Ifuente), 1), dtype="complex_")
 
     for i in range(len(Nodo_i_Ifuente)):
 
-        S_If_Z[i] = (np.sqrt(Vthevenin[Nodo_i_Ifuente[i]-1].real ** 2 + Vthevenin[Nodo_i_Ifuente[i]-1].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente[i])
+        S_If_Z[i] = (abs(ICorriente) ** 2) * Impedancia_I_fuente[i]
 
     PZ_If = S_If_Z.real
     QZ_If = S_If_Z.imag
-
+    print(S_If_Z)
     return PZ_If, QZ_If
 
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):

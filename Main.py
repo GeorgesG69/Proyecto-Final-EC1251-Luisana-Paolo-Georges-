@@ -274,14 +274,15 @@ def Main_Analisis():
         Dframe_Sfuente.loc[i, "Q [VAr]"] = Q_V_fuente[i]
 
     FilaIV, ColumnaIV = Dframe_Sfuente.shape 
+    print(Dframe_Sfuente.shape)
+    
+    for k in range(len(Nodo_I_fuente_i)):
 
-    for j in range(len(Nodo_I_fuente_i)):
-
-        Dframe_Sfuente.loc[FilaIV + j, "Bus i"] = Nodo_I_fuente_i[j]
-        Dframe_Sfuente.loc[FilaIV + j, "Bus j"] = Nodo_I_fuente_j[j]
-        Dframe_Sfuente.loc[FilaIV + j, "P [W]"] = P_I_fuente[j]
-        Dframe_Sfuente.loc[FilaIV + j, "Q [VAr]"] = Q_I_fuente[j]
-        
+        Dframe_Sfuente.loc[FilaIV + k, "Bus i"] = Nodo_I_fuente_i[k]
+        Dframe_Sfuente.loc[FilaIV + k, "Bus j"] = Nodo_I_fuente_j[k]
+        Dframe_Sfuente.loc[FilaIV + k, "P [W]"] = P_I_fuente[k]
+        Dframe_Sfuente.loc[FilaIV + k, "Q [VAr]"] = Q_I_fuente[k]
+      
     Dframe_Sfuente.to_excel(Escritor_Guardado, "Sfuente", index=False)
 
     # -S_Z

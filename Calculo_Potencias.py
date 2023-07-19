@@ -22,10 +22,12 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
         Indice_Vth = Indice_V_fuente[i] - 1
 
-        Voltaje_Potencia[i,0] = Vth[Indice_Vth, 0]
-        Voltaje_Impedancia = Voltajes_Fuente[i, 0] - Vth[Indice_Vth, 0]
+        Voltaje_Potencia[i,0] = Voltajes_Fuente[i, 0]
+        Voltaje_Impedancia = Vth[Indice_Vth, 0] - Voltajes_Fuente[i, 0]
+        print(Voltaje_Impedancia)
 
         Corrientes_V_fuentes[i,0] = Voltaje_Impedancia / Imp_V_fuente[i]
+        print()
     
     P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
     Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag

@@ -28,7 +28,7 @@ def V_fuente(res_v_fuente, indc_v_fuente, cap_v_fuente, v_ang, bus_V):
 
         if Impedancia_V_fuente[i] == 0:
 
-            Impedancia_V_fuente[i] = 0+(0.000001)*1j
+            Impedancia_V_fuente[i] = 0 + (0.000001)*1j
 
     
     
@@ -60,7 +60,7 @@ def I_fuente(res_i_fuente, indc_i_fuente, cap_i_fuente, v_ang, bus_I):
 
         if Impedancia_I_fuente[i] == 0:
 
-            Impedancia_I_fuente[i] = 0+(0.000001)*1j
+            Impedancia_I_fuente[i] = 0 + (0.000001)*1j
     
     return Impedancia_I_fuente, Impd_resist_i, Impd_induct_i, Impd_capact_i
 
@@ -95,13 +95,13 @@ def Matriz_Corrientes(Voltaje, Corriente, Desface_v, Desface_I, Impedancia_v, Nr
     for i in range(len(Nodo_v_i)):
 
         indice = Nodo_v_i[i]-1
-        Desface_v[i]= (Desface_v[i] * math.pi)/180
+        Desface_v[i]= (Desface_v[i] * math.pi) / 180
         Vec_Corrientes[indice] = (Voltaje[i] * (math.cos(Desface_v[i]) + 1j*math.sin(Desface_v[i])) / Impedancia_v[i]) 
 
     for i in range(len(Nodo_I_i)):
 
         indice2 = Nodo_I_i[i]-1
-        Desface_I[i]= (Desface_I[i] * math.pi)/180
+        Desface_I[i]= (Desface_I[i] * math.pi) / 180
         Vec_Corrientes[indice2] -= Corriente[i] * (math.cos(Desface_I[i]) + 1j*math.sin(Desface_I[i]))
         
     Vec_Corrientes = np.round(Vec_Corrientes,4)

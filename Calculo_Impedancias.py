@@ -104,8 +104,8 @@ def Matriz_Corrientes(Voltaje, Corriente, Desface_v, Desface_I, Impedancia_v, Nr
     for i in range(len(Nodo_v_i)):
 
         indice = Nodo_v_i[i]-1
-        print(Voltaje)
-        print(Desface_v[i])
+        #print(Voltaje)
+        #print(Desface_v[i])
         Vec_Corrientes[indice] = (Voltaje[i] * (math.cos(Desface_v[i]) + 1j*math.sin(Desface_v[i])) / Impedancia_v[i]) 
 
     for i in range(len(Nodo_I_i)):

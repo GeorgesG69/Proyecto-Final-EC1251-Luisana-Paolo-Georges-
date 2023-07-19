@@ -49,7 +49,7 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
 
     P_I_fuente = S_I_Fuente.real
     Q_I_fuente = S_I_Fuente.imag
-    print(S_I_Fuente)
+    #print(S_I_Fuente)
     return S_I_Fuente, P_I_fuente, Q_I_fuente
     
                                     # -Potencias de las impedancias- #

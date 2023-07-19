@@ -4,7 +4,7 @@ import math
 
                                                 # -Matríz Ybus- #
 def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
-    print(I_fuentes)
+
     Datos_Entrada = np.concatenate([V_fuentes, Zs], axis=0)
     
     Ybus_Salida = np.zeros((Nro_Nodos, Nro_Nodos), dtype="complex_")
@@ -50,7 +50,7 @@ def Matriz_Y_Bus(V_fuentes, I_fuentes, Zs, Nro_Nodos, Nro_N_i, Nro_N_j):
                 Ybus_Salida[i,i] = Ybus_Salida[i, i] + (1 / Datos_Entrada[k, 2])
                 
     #Ybus_Salida = np.round(Ybus_Salida,4)
-    print(Ybus_Salida)
+    #print(Ybus_Salida)
         
     return Ybus_Salida
 

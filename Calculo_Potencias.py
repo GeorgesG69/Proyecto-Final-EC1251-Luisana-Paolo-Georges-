@@ -83,19 +83,19 @@ def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
         
     S_Z = np.zeros((len(Impedancias_Z), 1), dtype="complex_")
-
+    print(Indice_Rama)
     for i in range(len(Impedancias_Z)):
 
         if Indice_Rama[i, 1] == 0 or Indice_Rama[i, 0] == 0:
             
             if Indice_Rama[i, 1] == 0:
 
-                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 0].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 0] - 1]).real ** 2 + (V_thevenin[Indice_Rama[i, 0] - 1]).imag ** 2)) ** 2 / np.conjugate(Impedancias_Z[i])
                 
 
             elif Indice_Rama[i, 0] == 0:
                  
-                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 1].real - 1]) ** 2 + (V_thevenin[Indice_Rama[i, 1] - 1].imag ** 2)) ** 2) / np.conjugate(Impedancias_Z[i])
+                S_Z[i] = (np.sqrt((V_thevenin[Indice_Rama[i, 1] - 1]).real ** 2 + (V_thevenin[Indice_Rama[i, 1] - 1]).imag ** 2)) ** 2 / np.conjugate(Impedancias_Z[i])
                 
 
         elif Indice_Rama[i, 1] != 0 or Indice_Rama[i, 0] != 0:

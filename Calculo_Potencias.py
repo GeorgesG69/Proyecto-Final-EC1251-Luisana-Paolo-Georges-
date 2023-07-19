@@ -58,8 +58,6 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
 
     for i in range(len(Nodo_i_Vfuente)):
         
-        a = (VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).real
-        b = (VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]).imag
         Modulo = abs((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]))
         
         S_Vf_Z[i] = Modulo ** 2 / np.conjugate(ImpVfuente[i])

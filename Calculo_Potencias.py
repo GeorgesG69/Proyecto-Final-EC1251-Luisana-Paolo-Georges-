@@ -3,10 +3,10 @@ import math
 import cmath
 
                                     # -Potencias de las fuentes de voltaje- #
-                                    
+
 def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
-    # Transformación del voltaje pico de las fuentes a forma rectangular.
+    # Transformación del voltaje de las fuentes a forma rectangular.
 
     Voltajes_Fuente = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
 

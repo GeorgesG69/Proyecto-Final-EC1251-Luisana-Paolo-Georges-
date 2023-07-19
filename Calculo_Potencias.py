@@ -43,13 +43,13 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
 
     for i in range(len(Bus_I_i)):
 
-        Voltaje_I_Fuente[i] = Imp_I_fuente[i] * Corriente_I_fuente[i]
+        Voltaje_I_Fuente[i] = V_Thevenin[i]
 
         S_I_Fuente[i] =  Voltaje_I_Fuente[i] * np.conjugate(Corriente_I_fuente[i])
 
     P_I_fuente = S_I_Fuente.real
     Q_I_fuente = S_I_Fuente.imag
-
+    print(S_I_Fuente)
     return S_I_Fuente, P_I_fuente, Q_I_fuente
     
                                     # -Potencias de las impedancias- #
@@ -69,6 +69,19 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
     QZ_Vf = S_Vf_Z.imag
 
     return PZ_Vf, QZ_Vf
+
+def Potencia_Z_If(IFuente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
+
+    S_If_Z = np.zeros((len(Nodo_i_Ifuente), 1), dtype="complex_")
+
+    for i in range(len(Nodo_i_Ifuente)):
+
+        S_If_Z[i] = (np.sqrt(Vthevenin[i].real ** 2 + Vthevenin[i].imag ** 2)) ** 2 / np.conjugate(Impedancia_I_fuente)
+
+    PZ_If = S_If_Z.real
+    QZ_If = S_If_Z.imag
+
+    return PZ_If, QZ_If
 
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
         
@@ -100,14 +113,14 @@ def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):
     
                                         # -Balance de Potencias- #
 
-def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z):
+def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z, PIf, QIf, PzIf,QzIf):
 
-    P_V_Entregado = np.sum(P_f_v) 
-    Q_V_Entregado = np.sum(Q_f_v) 
+    P_V_Entregado = np.sum(P_f_v) + np.sum(PIf)
+    Q_V_Entregado = np.sum(Q_f_v) + np.sum(QIf)
 
-    P_Impedancias = np.sum(P_Z) + np.sum(PzVf)
-    Q_Impedancias = np.sum(Q_Z) + np.sum(QzVf)
-    print(P_V_Entregado - P_Impedancias)
+    P_Impedancias = np.sum(P_Z) + np.sum(PzVf) + np.sum(PzIf)
+    Q_Impedancias = np.sum(Q_Z) + np.sum(QzVf) + np.sum(QzIf)
+    #print(P_V_Entregado - P_Impedancias)
 
     Delta_P = np.round(P_V_Entregado - P_Impedancias, 4)
     Delta_Q = np.round(Q_V_Entregado - Q_Impedancias, 4)

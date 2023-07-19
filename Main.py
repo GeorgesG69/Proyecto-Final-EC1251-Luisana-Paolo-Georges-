@@ -196,7 +196,7 @@ def Main_Analisis():
                                             # -Cálculo del Ybus, Zth y Vth- #
 
     # Corrientes inyectadas.
-
+    #print(V_pico_V_fuente)
     Vector_Corrientes_I = Calculo_Impedancias.Matriz_Corrientes(V_pico_V_fuente, I_pico_I_fuente,  Desfase_V_fuente, Desfase_I_fuente, Imp_V_fuente, Nro_Nodos, Nodo_V_fuente_i, Nodo_I_fuente_i)
     
 
@@ -222,7 +222,7 @@ def Main_Analisis():
 
     P_V_fuente, Q_V_fuente = Calculo_Potencias.V_fuentes(Imp_V_fuente, V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Nodo_V_fuente_i)
 
-    # Potencia de la potencia de las impedancias de las fuentes de voltaje
+    # Potencia de las impedancias de las fuentes de voltaje
 
     Pzvf, Qzvf = Calculo_Potencias.Potencia_Z_Vf(V_pico_V_fuente, V_thevenin_rect, Imp_V_fuente, Nodo_V_fuente_i)
 
@@ -230,6 +230,10 @@ def Main_Analisis():
     # Potencia de las fuentes de corriente
 
     S_I_fuente, P_I_fuente, Q_I_fuente = Calculo_Potencias.I_fuentes(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente, Nodo_I_fuente_i)
+
+    # Potencia de las impedancias de las fuentes de corriente
+
+    Pzif, Qzif = Calculo_Potencias.Potencia_Z_If(I_pico_I_fuente, V_thevenin_rect, Imp_I_fuente, Nodo_I_fuente_i)
     
     # Potencia de las impedancias.
 
@@ -238,7 +242,7 @@ def Main_Analisis():
 
     # Balance de potencias.
 
-    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Pzvf, Q_V_fuente,  Qzvf, P_Z, Q_Z)
+    D_P, D_Q = Calculo_Potencias.Balance_Potencias(P_V_fuente, Pzvf, Q_V_fuente,  Qzvf, P_Z, Q_Z, P_I_fuente, Q_I_fuente, Pzif, Qzif)
 
 
                                                 # -Guardado de datos- #
@@ -280,8 +284,8 @@ def Main_Analisis():
     Dframe_SZ.to_excel(Escritor_Guardado, "S_Z", index=False)
 
     # -Balance S
-    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente)# + P_I_fuente)
-    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente)# + Q_I_fuente)
+    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente) + np.sum(P_I_fuente)
+    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente) + np.sum(Q_I_fuente)
     Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z) + np.sum(Pzvf)
     Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z) + np.sum(Qzvf)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P

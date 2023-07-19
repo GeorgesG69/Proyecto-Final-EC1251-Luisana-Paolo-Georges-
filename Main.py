@@ -73,6 +73,11 @@ Dframe_Sfuente = pd.read_excel("data_io.xlsx","Sfuente")
 Dframe_SZ = pd.read_excel("data_io.xlsx","S_Z")
 Dframe_BalanceS = pd.read_excel("data_io.xlsx","Balance_S")
 
+Dframe_VZth.drop(["|Vth| (kV)", "<Vth (degrees)", "Rth (ohms)", "Xth (ohms)"], axis=1)
+Dframe_Sfuente.drop(["Bus i", "Bus j",	"P [W]", "Q [VAr]"], axis=1)
+Dframe_SZ.drop(["Bus i", "Bus j", "P [W]", "Q [Var]"], axis=1)
+Dframe_BalanceS.drop(["Pf total(W)", "Qf total(VAr)", "Pz total(W)", "Qz total(VAr)", "Delta P(W)",	"Delta Q total(VAr)"], axis=1)
+
                                             # -Indices de las ramas- #
 
 Indice_Rama = np.concatenate(([Nodo_Z_i],[Nodo_Z_j]))     
@@ -274,8 +279,7 @@ def Main_Analisis():
         Dframe_Sfuente.loc[i, "Q [VAr]"] = Q_V_fuente[i]
 
     FilaIV, ColumnaIV = Dframe_Sfuente.shape 
-    print(Dframe_Sfuente.shape)
-    
+        
     for k in range(len(Nodo_I_fuente_i)):
 
         Dframe_Sfuente.loc[FilaIV + k, "Bus i"] = Nodo_I_fuente_i[k]
@@ -308,13 +312,15 @@ def Main_Analisis():
 
     Escritor_Guardado.close()
 
-    print("\n\tFinalizado.\n")
+    
 
                                                 # -Copiado del archivo- #
 
     FileName = Dframe_f_output.iloc[1, 1]
 
     shutil.copy2("data_io.xlsx", FileName)
+
+    print(f"\n\tFinalizado para: {FileName}.\n")
 
 if __name__ == "__main__":
 

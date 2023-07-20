@@ -73,10 +73,10 @@ Dframe_Sfuente = pd.read_excel("data_io.xlsx","Sfuente")
 Dframe_SZ = pd.read_excel("data_io.xlsx","S_Z")
 Dframe_BalanceS = pd.read_excel("data_io.xlsx","Balance_S")
 
-Dframe_VZth.drop(["|Vth| (kV)", "<Vth (degrees)", "Rth (ohms)", "Xth (ohms)"], axis=1, inplace=True)
-Dframe_Sfuente.iloc[0:0]#drop(["Bus i", "Bus j",	"P [W]", "Q [VAr]"], axis=1, inplace=True)
-Dframe_SZ.drop(["Bus i", "Bus j", "P [W]", "Q [Var]"], axis=1, inplace=True)
-Dframe_BalanceS.drop(["Pf total(W)", "Qf total(VAr)", "Pz total(W)", "Qz total(VAr)", "Delta P(W)",	"Delta Q total(VAr)"], axis=1, inplace=True)
+#Dframe_VZth.iloc[0:0]
+#Dframe_Sfuente.iloc[0:0]
+#Dframe_SZ.iloc[0:0]
+#Dframe_BalanceS.iloc[0:0]
 
                                             # -Indices de las ramas- #
 
@@ -231,7 +231,7 @@ def Main_Analisis():
 
     # Potencia de las impedancias de las fuentes de voltaje
 
-    Pzvf, Qzvf = Calculo_Potencias.Potencia_Z_Vf(V_pico_V_fuente, V_thevenin_rect, Imp_V_fuente, Nodo_V_fuente_i)
+    Pzvf, Qzvf = Calculo_Potencias.Potencia_Z_Vf(V_pico_V_fuente, Desfase_V_fuente, V_thevenin_rect, Imp_V_fuente, Nodo_V_fuente_i)
 
 
     # Potencia de las fuentes de corriente

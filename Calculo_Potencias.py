@@ -7,12 +7,8 @@ import cmath
 def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
     Voltajes_Fuente = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
-
-    for i in range(len(Voltaje_Pico)):
-        
-        Voltajes_Fuente[i,0] = Voltaje_Pico[i] * (math.cos(Desfase[i])) + Voltaje_Pico[i] * (math.sin(Desfase[i]) * 1j)
-
     Voltaje_Potencia = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
+    S_V_Fuente = np.zeros((len(Voltaje_Pico), 1), dtype="complex_")
 
     # Cálculo de la corriente de las fuentes de voltaje.
 
@@ -20,16 +16,18 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
 
     for i in range(len(Voltaje_Pico)):
 
-        Indice_Vth = Indice_V_fuente[i] - 1
-
-        Voltaje_Potencia[i,0] = Voltajes_Fuente[i, 0]
-        Voltaje_Impedancia = Vth[Indice_Vth, 0] - Voltajes_Fuente[i, 0]
+        #Indice_Vth = Indice_V_fuente[i] - 1
+        Voltajes_Fuente[i] = Voltaje_Pico[i] * ((np.cos(Desfase[i])) + (np.sin(Desfase[i]) * 1j))
         
-        Corrientes_V_fuentes[i,0] = Voltaje_Impedancia / Imp_V_fuente[i]
+        Voltaje_Impedancia = Vth[Indice_V_fuente[i] - 1] - Voltajes_Fuente[i]
+        
+        Corrientes_V_fuentes[i] = Voltaje_Impedancia / Imp_V_fuente[i]
+
+        S_V_Fuente[i] = (Voltajes_Fuente[i] * np.conjugate(Corrientes_V_fuentes[i]))
         
     
-    P_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).real
-    Q_V_fuente = (Voltaje_Potencia * np.conjugate(Corrientes_V_fuentes)).imag
+    P_V_fuente = S_V_Fuente.real
+    Q_V_fuente = S_V_Fuente.imag
     
     return P_V_fuente, Q_V_fuente
 
@@ -52,17 +50,22 @@ def I_fuentes(Corriente_I_fuente, V_Thevenin, Imp_I_fuente, Bus_I_i):
     
                                     # -Potencias de las impedancias- #
 
-def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
-    #print(len(ImpVfuente))
-
+def Potencia_Z_Vf(Vfuente, DesfaseV, VThevenin, ImpVfuente, Nodo_i_Vfuente):
+    
+    VoltajesF = np.zeros((len(Nodo_i_Vfuente), 1), dtype="complex_")
+    
     S_Vf_Z = np.zeros((len(Nodo_i_Vfuente), 1), dtype="complex_")
+    
 
     for i in range(len(Nodo_i_Vfuente)):
         
-        Modulo = abs((VThevenin[Nodo_i_Vfuente[i] - 1] - Vfuente[i]))
+        VoltajesF[i] = Vfuente[i] * ((np.cos(DesfaseV[i])) + (1j * np.sin(DesfaseV[i])))
         
-        S_Vf_Z[i] = Modulo ** 2 / np.conjugate(ImpVfuente[i])
-        #print(S_Vf_Z[i])
+        Voltaje_IMP = VThevenin[Nodo_i_Vfuente[i] - 1] - VoltajesF[i]
+        Corriente_IMP = Voltaje_IMP / ImpVfuente[i]
+        
+        S_Vf_Z[i] = Voltaje_IMP * np.conjugate(Corriente_IMP)
+        print(S_Vf_Z[i])
 
     PZ_Vf = S_Vf_Z.real
     QZ_Vf = S_Vf_Z.imag
@@ -79,7 +82,7 @@ def Potencia_Z_If(ICorriente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):
 
     PZ_If = S_If_Z.real
     QZ_If = S_If_Z.imag
-    print(PZ_If, QZ_If)
+    #print(PZ_If, QZ_If)
     return PZ_If, QZ_If
 
 def Potencias_Z(Indice_Rama, Impedancias_Z, V_thevenin):

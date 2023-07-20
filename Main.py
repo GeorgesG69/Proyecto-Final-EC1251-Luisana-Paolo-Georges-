@@ -73,10 +73,10 @@ Dframe_Sfuente = pd.read_excel("data_io.xlsx","Sfuente")
 Dframe_SZ = pd.read_excel("data_io.xlsx","S_Z")
 Dframe_BalanceS = pd.read_excel("data_io.xlsx","Balance_S")
 
-Dframe_VZth.drop(["|Vth| (kV)", "<Vth (degrees)", "Rth (ohms)", "Xth (ohms)"], axis=1)
-Dframe_Sfuente.drop(["Bus i", "Bus j",	"P [W]", "Q [VAr]"], axis=1)
-Dframe_SZ.drop(["Bus i", "Bus j", "P [W]", "Q [Var]"], axis=1)
-Dframe_BalanceS.drop(["Pf total(W)", "Qf total(VAr)", "Pz total(W)", "Qz total(VAr)", "Delta P(W)",	"Delta Q total(VAr)"], axis=1)
+Dframe_VZth.drop(["|Vth| (kV)", "<Vth (degrees)", "Rth (ohms)", "Xth (ohms)"], axis=1, inplace=True)
+Dframe_Sfuente.iloc[0:0]#drop(["Bus i", "Bus j",	"P [W]", "Q [VAr]"], axis=1, inplace=True)
+Dframe_SZ.drop(["Bus i", "Bus j", "P [W]", "Q [Var]"], axis=1, inplace=True)
+Dframe_BalanceS.drop(["Pf total(W)", "Qf total(VAr)", "Pz total(W)", "Qz total(VAr)", "Delta P(W)",	"Delta Q total(VAr)"], axis=1, inplace=True)
 
                                             # -Indices de las ramas- #
 
@@ -278,14 +278,14 @@ def Main_Analisis():
         Dframe_Sfuente.loc[i, "P [W]"] = P_V_fuente[i]
         Dframe_Sfuente.loc[i, "Q [VAr]"] = Q_V_fuente[i]
 
-    FilaIV, ColumnaIV = Dframe_Sfuente.shape 
-        
+    FilaIV = len(Nodo_V_fuente_i) 
+    
     for k in range(len(Nodo_I_fuente_i)):
-
-        Dframe_Sfuente.loc[FilaIV + k, "Bus i"] = Nodo_I_fuente_i[k]
-        Dframe_Sfuente.loc[FilaIV + k, "Bus j"] = Nodo_I_fuente_j[k]
-        Dframe_Sfuente.loc[FilaIV + k, "P [W]"] = P_I_fuente[k]
-        Dframe_Sfuente.loc[FilaIV + k, "Q [VAr]"] = Q_I_fuente[k]
+        
+        Dframe_Sfuente.loc[FilaIV + k + 1, "Bus i"] = Nodo_I_fuente_i[k]
+        Dframe_Sfuente.loc[FilaIV + k + 1, "Bus j"] = Nodo_I_fuente_j[k]
+        Dframe_Sfuente.loc[FilaIV + k + 1, "P [W]"] = round(P_I_fuente[k], 4)
+        Dframe_Sfuente.loc[FilaIV + k + 1, "Q [VAr]"] = round(Q_I_fuente[k], 4)
       
     Dframe_Sfuente.to_excel(Escritor_Guardado, "Sfuente", index=False)
 
@@ -297,13 +297,14 @@ def Main_Analisis():
         Dframe_SZ.loc[i, "P [W]"] = P_Z[i]
         Dframe_SZ.loc[i, "Q [Var]"] = Q_Z[i]
 
+
     Dframe_SZ.to_excel(Escritor_Guardado, "S_Z", index=False)
 
     # -Balance S
-    Dframe_BalanceS.loc[0, "Pf total(W)"] = np.sum(P_V_fuente) + np.sum(P_I_fuente)
-    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = np.sum(Q_V_fuente) + np.sum(Q_I_fuente)
-    Dframe_BalanceS.loc[0, "Pz total(W)"] = np.sum(P_Z) + np.sum(Pzvf) + np.sum(Pzif)
-    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = np.sum(Q_Z) + np.sum(Qzvf) + np.sum(Qzif)
+    Dframe_BalanceS.loc[0, "Pf total(W)"] = round(np.sum(P_V_fuente) + np.sum(P_I_fuente), 4)
+    Dframe_BalanceS.loc[0, "Qf total(VAr)"] = round(np.sum(Q_V_fuente) + np.sum(Q_I_fuente), 4)
+    Dframe_BalanceS.loc[0, "Pz total(W)"] = round(np.sum(P_Z) + np.sum(Pzvf) + np.sum(Pzif), 4)
+    Dframe_BalanceS.loc[0, "Qz total(VAr)"] = round(np.sum(Q_Z) + np.sum(Qzvf) + np.sum(Qzif), 4)
     Dframe_BalanceS.loc[0, "Delta P(W)"] = D_P
     Dframe_BalanceS.loc[0, "Delta Q total(VAr)"] = D_Q
 

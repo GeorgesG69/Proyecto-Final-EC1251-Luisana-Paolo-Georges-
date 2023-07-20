@@ -66,7 +66,7 @@ def Potencia_Z_Vf(Vfuente, VThevenin, ImpVfuente, Nodo_i_Vfuente):
 
     PZ_Vf = S_Vf_Z.real
     QZ_Vf = S_Vf_Z.imag
-    print(PZ_Vf, QZ_Vf)
+    
     return PZ_Vf, QZ_Vf
 
 def Potencia_Z_If(ICorriente, Vthevenin, Impedancia_I_fuente, Nodo_i_Ifuente):

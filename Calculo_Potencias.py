@@ -19,7 +19,7 @@ def V_fuentes(Imp_V_fuente, Voltaje_Pico, Desfase, Vth, Indice_V_fuente):
         #Indice_Vth = Indice_V_fuente[i] - 1
         Voltajes_Fuente[i] = Voltaje_Pico[i] * ((np.cos(Desfase[i])) + (np.sin(Desfase[i]) * 1j))
         
-        Voltaje_Impedancia = Vth[Indice_V_fuente[i] - 1] - Voltajes_Fuente[i]
+        Voltaje_Impedancia = Voltajes_Fuente[i] - Vth[Indice_V_fuente[i] - 1]
         
         Corrientes_V_fuentes[i] = Voltaje_Impedancia / Imp_V_fuente[i]
 

@@ -63,7 +63,7 @@ def Potencia_Z_Vf(Vfuente, DesfaseV, VThevenin, ImpVfuente, Nodo_i_Vfuente):
         
         Voltaje_IMP = VThevenin[Nodo_i_Vfuente[i] - 1] - VoltajesF[i]
         Corriente_IMP = Voltaje_IMP / ImpVfuente[i]
-        
+        print("corriente pue", Corriente_IMP)
         S_Vf_Z[i] = Voltaje_IMP * np.conjugate(Corriente_IMP)
         #print(S_Vf_Z[i])
 

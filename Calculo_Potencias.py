@@ -124,7 +124,8 @@ def Balance_Potencias(P_f_v, PzVf, Q_f_v, QzVf, P_Z, Q_Z, PIf, QIf, PzIf,QzIf):
 
     Delta_P = P_V_Entregado - P_Impedancias
     Delta_Q = Q_V_Entregado - Q_Impedancias
-    
+    print(f"Delta P:\n\n{Delta_P}")
+    print(f"Delta Q:\n\n{Delta_Q}")
     return Delta_P, Delta_Q
 
 
